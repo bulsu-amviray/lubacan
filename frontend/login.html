@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administrator sign in · LUBA CanFindIT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/luba-reference.css" />
+</head>
+
+<body>
+  <div class="luba-auth">
+    <!-- Left brand panel (50% · navy) → collapses to header strip ≤ 900px -->
+    <aside class="luba-auth-brand" aria-label="LUBA CanFindIT">
+      <svg class="luba-auth-pattern" viewBox="0 0 720 1024" preserveAspectRatio="xMidYMid slice" fill="none"
+        stroke="currentColor" aria-hidden="true">
+        <path d="M-40 760 Q 260 640 760 700" stroke-width="18" />
+        <path d="M120 1060 L 520 -40" stroke-width="30" />
+        <path d="M110 1060 L 510 -40" stroke-width="2" stroke-dasharray="14 12" />
+        <path d="M180 300 L 620 300 L 600 620 L 230 590 Z" stroke-width="8" />
+        <path d="M-40 180 Q 300 240 760 140" stroke-width="10" />
+        <circle cx="430" cy="420" r="9" stroke-width="3" />
+        <circle cx="300" cy="640" r="9" stroke-width="3" />
+      </svg>
+
+      <img src="/assets/luba-login-logo.png" alt="LUBA CanFindIT" class="luba-auth-logo" />
+
+      <div class="luba-auth-hero">
+        <h1 class="luba-auth-headline">Built for better roads.</h1>
+        <p class="luba-auth-subtext">One connected workflow from report to verified repair.</p>
+        <ul class="luba-auth-features">
+          <li class="luba-auth-feature">
+            <span class="luba-auth-feature-icon">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                stroke-linejoin="round" viewBox="0 0 24 24">
+                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
+                <rect x="9" y="3" width="6" height="4" rx="1" />
+                <path d="M9 14l2 2 4-4" />
+              </svg>
+            </span>
+            Review and verify citizen reports
+          </li>
+          <li class="luba-auth-feature">
+            <span class="luba-auth-feature-icon">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                stroke-linejoin="round" viewBox="0 0 24 24">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+              </svg>
+            </span>
+            Assign repair teams
+          </li>
+          <li class="luba-auth-feature">
+            <span class="luba-auth-feature-icon">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                stroke-linejoin="round" viewBox="0 0 24 24">
+                <circle cx="6" cy="19" r="2" />
+                <circle cx="18" cy="5" r="2" />
+                <path d="M8 19h8.5a3.5 3.5 0 000-7h-9a3.5 3.5 0 010-7H16" />
+              </svg>
+            </span>
+            Track repairs to resolution
+          </li>
+        </ul>
+      </div>
+
+      <p class="luba-auth-demo"></p>
+    </aside>
+
+    <!-- Right panel (50% · canvas) with centered login card -->
+    <main class="luba-auth-main">
+      <form id="login-card" class="luba-login-card" novalidate></form>
+    </main>
+  </div>
+
+  <script type="module" src="/js/login.js"></script>
+</body>
+
+</html>

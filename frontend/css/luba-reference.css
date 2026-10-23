@@ -1,0 +1,925 @@
+/* ==========================================================================
+ * LUBA CanFindIT · Master Reference Stylesheet (Adapted 1:1 from 26 PNGs)
+ * Resolution Reference: 1440 x 1427 px · Quezon City LGU Engineering Dept
+ * ========================================================================== */
+
+:root {
+  /* Core Brand & Surface Palette */
+  --luba-navy: #102D4F;
+  --luba-navy-active: #1E3959;
+  --luba-navy-muted: #2E4765;
+  --luba-canvas: #F3F6FA;
+  --luba-surface: #FFFFFF;
+  --luba-surface-muted: #EEF3F8;
+  --luba-table-header: #EDF2F7;
+  --luba-border: #DCE4EE;
+  --luba-border-strong: #CED5DD;
+  --luba-control-track: #E2E8F0;
+
+  /* Typography & Sidebar Colors */
+  --luba-text-primary: #0F2742;
+  --luba-text-secondary: #32475D;
+  --luba-text-muted: #506274;
+  --luba-text-subtle: #607287;
+  --luba-auth-muted: #6E8098;
+  --luba-auth-label: #4A5D75;
+  --luba-sidebar-text: #CFD9E5;
+  --luba-sidebar-nav: #C3D0DF;
+  --luba-sidebar-muted: #8FA3BA;
+  --luba-sidebar-icon: #9FB2C8;
+
+  /* Action & Semantic Status Palette */
+  --luba-cta: #D95820;
+  --luba-cta-hover: #C04B17;
+  --luba-cta-tint: #FFF5EF;
+
+  --luba-info: #225A91;
+  --luba-info-text: #1C4E80;
+  --luba-info-bg: #EAF2FB;
+  --luba-info-pill-bg: #E8F1FB;
+  --luba-info-border: #C9DDF3;
+
+  --luba-warning-text: #9A6300;
+  --luba-warning-bg: #FDF3DC;
+  --luba-warning-border: #F3D599;
+
+  --luba-success: #197653;
+  --luba-success-bg: #E5F5ED;
+  --luba-success-border: #B7E2CC;
+
+  --luba-danger: #B93838;
+  --luba-danger-hover: #9E2E2E;
+  --luba-danger-bg: #FCEAEA;
+  --luba-danger-border: #F3C0C0;
+
+  --luba-neutral-bg: #EAEEF4;
+  --luba-neutral-text: #47586E;
+
+  /* Map Schematic Palette */
+  --luba-map-bg: #E9F0EA;
+  --luba-map-park-1: #DCE7DC;
+  --luba-map-park-2: #D3E3D4;
+  --luba-map-corridor: #D9B88F;
+  --luba-map-cluster: #8FB3D9;
+
+  /* Layout Dimensions & Radii */
+  --luba-sidebar-width: 236px;
+  --luba-topbar-height: 80px;
+  --luba-content-max-width: 1204px;
+  --luba-radius-card: 12px;
+  --luba-radius-login-card: 14px;
+  --luba-radius-banner: 10px;
+  --luba-radius-modal: 16px;
+  --luba-radius-control: 8px;
+
+  /* Shadows */
+  --luba-shadow-card: 0 1px 2px 0 rgba(16, 45, 79, 0.04);
+  --luba-shadow-modal: 0 20px 45px -10px rgba(16, 45, 79, 0.28);
+}
+
+/* Base Document & Typography Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--luba-canvas);
+  color: var(--luba-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ==========================================================================
+ * Explicit Token Utility Classes (Guaranteed fallback even before CDN JS runs)
+ * ========================================================================== */
+.w-sidebar {
+  width: var(--luba-sidebar-width) !important;
+  min-width: var(--luba-sidebar-width) !important;
+  max-width: var(--luba-sidebar-width) !important;
+}
+
+.h-topbar {
+  height: var(--luba-topbar-height) !important;
+  min-height: var(--luba-topbar-height) !important;
+}
+
+.bg-luba-navy { background-color: var(--luba-navy) !important; }
+.bg-luba-navyActive { background-color: var(--luba-navy-active) !important; }
+.bg-luba-navyMuted { background-color: var(--luba-navy-muted) !important; }
+.bg-luba-canvas { background-color: var(--luba-canvas) !important; }
+.bg-luba-surface { background-color: var(--luba-surface) !important; }
+.bg-luba-surfaceMuted { background-color: var(--luba-surface-muted) !important; }
+.bg-luba-tableHeader { background-color: var(--luba-table-header) !important; }
+.bg-luba-controlTrack { background-color: var(--luba-control-track) !important; }
+.bg-luba-cta { background-color: var(--luba-cta) !important; }
+.hover\:bg-luba-ctaHover:hover { background-color: var(--luba-cta-hover) !important; }
+.bg-luba-ctaTint { background-color: var(--luba-cta-tint) !important; }
+.bg-luba-info { background-color: var(--luba-info) !important; }
+.bg-luba-infoBg { background-color: var(--luba-info-bg) !important; }
+.bg-luba-infoPillBg { background-color: var(--luba-info-pill-bg) !important; }
+.bg-luba-warningBg { background-color: var(--luba-warning-bg) !important; }
+.bg-luba-success { background-color: var(--luba-success) !important; }
+.bg-luba-successBg { background-color: var(--luba-success-bg) !important; }
+.bg-luba-danger { background-color: var(--luba-danger) !important; }
+.hover\:bg-luba-dangerHover:hover { background-color: var(--luba-danger-hover) !important; }
+.bg-luba-dangerBg { background-color: var(--luba-danger-bg) !important; }
+.bg-luba-neutralBg { background-color: var(--luba-neutral-bg) !important; }
+.bg-luba-mapBg { background-color: var(--luba-map-bg) !important; }
+.bg-luba-mapPark1 { background-color: var(--luba-map-park-1) !important; }
+.bg-luba-mapPark2 { background-color: var(--luba-map-park-2) !important; }
+.bg-luba-mapCluster { background-color: rgba(143, 179, 217, 0.55) !important; }
+
+.text-luba-navy { color: var(--luba-navy) !important; }
+.text-luba-sidebarText { color: var(--luba-sidebar-text) !important; }
+.text-luba-sidebarNav { color: var(--luba-sidebar-nav) !important; }
+.text-luba-sidebarMuted { color: var(--luba-sidebar-muted) !important; }
+.text-luba-sidebarIcon { color: var(--luba-sidebar-icon) !important; }
+.text-luba-textPrimary { color: var(--luba-text-primary) !important; }
+.text-luba-textSecondary { color: var(--luba-text-secondary) !important; }
+.text-luba-textMuted { color: var(--luba-text-muted) !important; }
+.text-luba-textSubtle { color: var(--luba-text-subtle) !important; }
+.text-luba-cta { color: var(--luba-cta) !important; }
+.text-luba-info { color: var(--luba-info) !important; }
+.text-luba-infoText { color: var(--luba-info-text) !important; }
+.text-luba-warningText { color: var(--luba-warning-text) !important; }
+.text-luba-success { color: var(--luba-success) !important; }
+.text-luba-danger { color: var(--luba-danger) !important; }
+.text-luba-neutralText { color: var(--luba-neutral-text) !important; }
+
+.border-luba-navy { border-color: var(--luba-navy) !important; }
+.border-luba-border { border-color: var(--luba-border) !important; }
+.border-luba-borderStrong { border-color: var(--luba-border-strong) !important; }
+.border-luba-cta { border-color: var(--luba-cta) !important; }
+.border-luba-info { border-color: var(--luba-info) !important; }
+.border-luba-infoBorder { border-color: var(--luba-info-border) !important; }
+.border-luba-warningBorder { border-color: var(--luba-warning-border) !important; }
+.border-luba-success { border-color: var(--luba-success) !important; }
+.border-luba-successBorder { border-color: var(--luba-success-border) !important; }
+.border-luba-danger { border-color: var(--luba-danger) !important; }
+.border-luba-dangerBorder { border-color: var(--luba-danger-border) !important; }
+.border-luba-textMuted { border-color: var(--luba-text-muted) !important; }
+
+.hover\:bg-luba-canvas:hover { background-color: var(--luba-canvas) !important; }
+.hover\:text-luba-info:hover { color: var(--luba-info) !important; }
+.hover\:text-luba-textPrimary:hover { color: var(--luba-text-primary) !important; }
+
+.rounded-card { border-radius: var(--luba-radius-card) !important; }
+.rounded-banner { border-radius: var(--luba-radius-banner) !important; }
+.rounded-modal { border-radius: var(--luba-radius-modal) !important; }
+.rounded-control { border-radius: var(--luba-radius-control) !important; }
+
+.shadow-card { box-shadow: var(--luba-shadow-card) !important; }
+.shadow-modal { box-shadow: var(--luba-shadow-modal) !important; }
+
+/* ==========================================================================
+ * Shared Reusable Components (Sidebar, Topbar, Card, Banner, Badge, Button, Modal)
+ * ========================================================================== */
+
+/* 1. Sidebar Component (236px fixed width · #102D4F navy · full height) */
+.luba-sidebar {
+  width: var(--luba-sidebar-width);
+  min-width: var(--luba-sidebar-width);
+  max-width: var(--luba-sidebar-width);
+  min-height: 100vh;
+  background-color: var(--luba-navy);
+  color: var(--luba-surface);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 24px 16px;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.luba-nav-btn {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  border-radius: var(--luba-radius-control);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--luba-sidebar-nav);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.luba-nav-btn:hover {
+  background-color: rgba(30, 57, 89, 0.65);
+  color: var(--luba-surface);
+}
+
+.luba-nav-btn-active {
+  background-color: var(--luba-navy-active) !important;
+  color: var(--luba-surface) !important;
+  font-weight: 600 !important;
+}
+
+/* 2. Topbar Component (80px height · #FFFFFF · 1px bottom border) */
+.luba-topbar {
+  height: var(--luba-topbar-height);
+  min-height: var(--luba-topbar-height);
+  background-color: var(--luba-surface);
+  border-bottom: 1px solid var(--luba-border);
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+/* 3. Page Titles & Subtitles matching the 26 PNG headers */
+.luba-page-title {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--luba-text-primary);
+  margin: 0;
+}
+
+.luba-page-subtitle {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--luba-text-subtle);
+  margin: 4px 0 0 0;
+}
+
+/* 4. Card & Surface Containers */
+.luba-card {
+  background-color: var(--luba-surface);
+  border: 1px solid var(--luba-border);
+  border-radius: var(--luba-radius-card);
+  box-shadow: var(--luba-shadow-card);
+}
+
+/* 5. KPI Metric Card Value (30–34px bold) */
+.luba-kpi-value {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--luba-text-primary);
+}
+
+/* 6. Callout Banner Component (10px radius, 1px semantic border) */
+.luba-banner {
+  border-radius: var(--luba-radius-banner);
+  padding: 14px 18px;
+  border: 1px solid transparent;
+}
+
+.luba-banner-info {
+  background-color: var(--luba-info-bg);
+  border-color: var(--luba-info-border);
+  color: var(--luba-info-text);
+}
+
+.luba-banner-warning {
+  background-color: var(--luba-warning-bg);
+  border-color: var(--luba-warning-border);
+  color: var(--luba-warning-text);
+}
+
+.luba-banner-success {
+  background-color: var(--luba-success-bg);
+  border-color: var(--luba-success-border);
+  color: var(--luba-success);
+}
+
+.luba-banner-danger {
+  background-color: var(--luba-danger-bg);
+  border-color: var(--luba-danger-border);
+  color: var(--luba-danger);
+}
+
+/* 7. Status & Severity Pill Badges */
+.luba-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.luba-badge-info {
+  background-color: var(--luba-info-pill-bg);
+  color: var(--luba-info);
+}
+
+.luba-badge-warning {
+  background-color: var(--luba-warning-bg);
+  color: var(--luba-warning-text);
+}
+
+.luba-badge-success {
+  background-color: var(--luba-success-bg);
+  color: var(--luba-success);
+}
+
+.luba-badge-danger {
+  background-color: var(--luba-danger-bg);
+  color: var(--luba-danger);
+}
+
+.luba-badge-neutral {
+  background-color: var(--luba-neutral-bg);
+  color: var(--luba-neutral-text);
+}
+
+/* 8. Buttons & Segmented Pills */
+.luba-btn-primary {
+  background-color: var(--luba-cta);
+  color: var(--luba-surface);
+  border: 1px solid var(--luba-cta);
+  border-radius: var(--luba-radius-control);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.luba-btn-primary:hover {
+  background-color: var(--luba-cta-hover);
+  border-color: var(--luba-cta-hover);
+}
+
+.luba-btn-secondary {
+  background-color: var(--luba-surface);
+  color: var(--luba-text-primary);
+  border: 1px solid var(--luba-border);
+  border-radius: var(--luba-radius-control);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--luba-shadow-card);
+  transition: background-color 150ms ease;
+}
+
+.luba-btn-secondary:hover {
+  background-color: var(--luba-canvas);
+}
+
+.luba-btn-danger {
+  background-color: var(--luba-danger);
+  color: var(--luba-surface);
+  border: 1px solid var(--luba-danger);
+  border-radius: var(--luba-radius-control);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.luba-btn-danger:hover {
+  background-color: var(--luba-danger-hover);
+}
+
+.luba-btn-disabled {
+  background-color: var(--luba-neutral-bg);
+  color: var(--luba-text-subtle);
+  border: 1px solid var(--luba-neutral-bg);
+  border-radius: var(--luba-radius-control);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: not-allowed;
+}
+
+.luba-pill {
+  padding: 6px 14px;
+  border-radius: var(--luba-radius-control);
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid var(--luba-border);
+  background-color: var(--luba-surface);
+  color: var(--luba-text-primary);
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.luba-pill:hover {
+  background-color: var(--luba-canvas);
+}
+
+.luba-pill-active {
+  background-color: var(--luba-navy) !important;
+  border-color: var(--luba-navy) !important;
+  color: var(--luba-surface) !important;
+}
+
+/* 9. Clean Select Dropdown */
+select.luba-clean-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+
+/* 10. Table Header & Row Styling */
+.luba-table-header {
+  background-color: var(--luba-table-header);
+  border-bottom: 1px solid var(--luba-border);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--luba-text-subtle);
+}
+
+.luba-table-row {
+  border-bottom: 1px solid var(--luba-border);
+  transition: background-color 150ms ease;
+}
+
+.luba-table-row:last-child {
+  border-bottom: none;
+}
+
+.luba-table-row:hover {
+  background-color: rgba(243, 246, 250, 0.65);
+}
+
+/* 11. Form Field Box */
+.luba-field-box {
+  background-color: var(--luba-surface);
+  border: 1px solid var(--luba-border);
+  border-radius: var(--luba-radius-control);
+  padding: 12px 14px;
+  transition: border-color 150ms ease;
+}
+
+.luba-field-box:focus-within {
+  border-color: var(--luba-info);
+}
+
+.luba-field-box-error {
+  background-color: var(--luba-surface);
+  border: 1.5px solid var(--luba-danger);
+  border-radius: var(--luba-radius-control);
+  padding: 12px 14px;
+}
+
+/* 12. Schematic Map Vector Stroke Classes (No inline hex needed) */
+.luba-map-road-stroke {
+  stroke: var(--luba-surface);
+}
+
+.luba-map-corridor-stroke {
+  stroke: var(--luba-map-corridor);
+}
+
+/* 13. Modal Backdrop & Dialog Box */
+.luba-modal-backdrop {
+  background-color: rgba(16, 45, 79, 0.58);
+}
+
+.luba-modal-dialog {
+  background-color: var(--luba-surface);
+  border-radius: var(--luba-radius-modal);
+  box-shadow: var(--luba-shadow-modal);
+  max-width: 540px;
+  width: 100%;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--luba-canvas);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--luba-border-strong);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--luba-text-subtle);
+}
+
+/* ==========================================================================
+ * 14. Administrator Sign-in (login.html) · Split screen 50/50 · 1440x1024
+ * Flat design · subtle borders · no gradients / heavy shadows
+ * ========================================================================== */
+.luba-auth {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--luba-canvas);
+}
+
+/* Left brand panel */
+.luba-auth-brand {
+  position: relative;
+  flex: 0 0 50%;
+  max-width: 50%;
+  background-color: var(--luba-navy);
+  color: var(--luba-surface);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px 64px;
+  overflow: hidden;
+}
+
+.luba-auth-pattern {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--luba-sidebar-text);
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+.luba-auth-brand > :not(.luba-auth-pattern) { position: relative; z-index: 1; }
+
+.luba-auth-logo { height: 60px; width: auto; max-width: 240px; object-fit: contain; align-self: flex-start; display: block; }
+
+.luba-auth-hero { max-width: 460px; }
+
+.luba-auth-headline {
+  font-size: 40px;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--luba-surface);
+  margin: 0;
+}
+
+.luba-auth-subtext {
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--luba-sidebar-text);
+  margin: 16px 0 0;
+}
+
+.luba-auth-features {
+  list-style: none;
+  padding: 0;
+  margin: 40px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.luba-auth-feature {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 15px;
+  color: var(--luba-surface);
+}
+
+.luba-auth-feature-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: var(--luba-radius-control);
+  border: 1px solid var(--luba-navy-muted);
+  background-color: var(--luba-navy-active);
+  color: var(--luba-cta);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.luba-auth-demo {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--luba-sidebar-muted);
+}
+
+/* Right form panel */
+.luba-auth-main {
+  flex: 1 1 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 32px;
+  background-color: var(--luba-canvas);
+}
+
+.luba-login-card {
+  width: 440px;
+  max-width: 100%;
+  background-color: var(--luba-surface);
+  border: 1px solid var(--luba-border);
+  border-radius: var(--luba-radius-login-card);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.luba-login-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--luba-auth-muted);
+  margin: 0;
+}
+
+.luba-login-title {
+  font-size: 28px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--luba-text-primary);
+  margin: 6px 0 0;
+}
+
+.luba-login-subtitle {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--luba-auth-muted);
+  margin: 8px 0 0;
+}
+
+/* Reusable form field (auto layout: label → control → helper) */
+.luba-field { display: flex; flex-direction: column; gap: 6px; }
+
+.luba-field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--luba-auth-label);
+}
+
+.luba-input-wrap { position: relative; display: flex; align-items: center; }
+
+.luba-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--luba-text-primary);
+  background-color: var(--luba-surface);
+  border: 1px solid var(--luba-border);
+  border-radius: var(--luba-radius-control);
+  outline: none;
+  appearance: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.luba-input::placeholder { color: var(--luba-auth-muted); opacity: 0.8; }
+
+/* Focus = 2px #225A91 border (1px border + 1px inset ring keeps layout stable) */
+.luba-input:focus,
+.luba-input.is-focused {
+  border-color: var(--luba-info);
+  box-shadow: 0 0 0 1px var(--luba-info);
+}
+
+.luba-input.is-error {
+  border-color: var(--luba-danger);
+  box-shadow: 0 0 0 1px var(--luba-danger);
+}
+
+.luba-input:disabled { background-color: var(--luba-surface-muted); color: var(--luba-auth-muted); cursor: not-allowed; }
+
+.luba-input-has-icon { padding-right: 44px; }
+
+.luba-select { cursor: pointer; padding-right: 40px; }
+
+.luba-input-icon {
+  position: absolute;
+  right: 12px;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--luba-auth-muted);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.luba-input-icon.is-static { pointer-events: none; }
+
+.luba-field-error {
+  font-size: 12px;
+  color: var(--luba-danger);
+  margin: 0;
+}
+
+/* Remember / forgot row */
+.luba-login-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.luba-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--luba-auth-label);
+  cursor: pointer;
+}
+
+.luba-checkbox input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--luba-info);
+  cursor: pointer;
+}
+
+.luba-link {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--luba-info);
+  text-decoration: none;
+}
+
+.luba-link:hover { text-decoration: underline; }
+
+/* Reusable buttons */
+.luba-btn {
+  width: 100%;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: var(--luba-radius-banner);
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.luba-btn-cta {
+  background-color: var(--luba-cta);
+  color: var(--luba-surface);
+  border: 1px solid var(--luba-cta);
+}
+
+.luba-btn-cta:hover { background-color: var(--luba-cta-hover); border-color: var(--luba-cta-hover); }
+
+.luba-btn-cta:disabled,
+.luba-btn-cta.is-loading {
+  opacity: 0.72;
+  cursor: not-allowed;
+}
+
+.luba-btn-cta.is-loading:hover { background-color: var(--luba-cta); border-color: var(--luba-cta); }
+
+.luba-btn-outline {
+  background-color: var(--luba-surface);
+  color: var(--luba-text-primary);
+  border: 1px solid var(--luba-border);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.luba-btn-outline:hover { background-color: var(--luba-canvas); }
+
+.luba-btn-outline:disabled { color: var(--luba-auth-muted); cursor: not-allowed; }
+
+.luba-spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: var(--luba-surface);
+  animation: luba-spin 0.8s linear infinite;
+}
+
+@keyframes luba-spin { to { transform: rotate(360deg); } }
+
+/* "or" divider */
+.luba-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--luba-auth-muted);
+}
+
+.luba-divider::before,
+.luba-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--luba-border);
+}
+
+/* Auth banners (icon + text, 10px radius) */
+.luba-auth-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid;
+  border-radius: var(--luba-radius-banner);
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+.luba-auth-banner svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; }
+
+.luba-auth-banner-error { background-color: var(--luba-danger-bg); border-color: var(--luba-danger-border); color: var(--luba-danger); }
+.luba-auth-banner-warning { background-color: var(--luba-warning-bg); border-color: var(--luba-warning-border); color: var(--luba-warning-text); }
+
+.luba-login-footnote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--luba-auth-muted);
+  margin: 0;
+}
+
+/* Design-review state switcher (outside the card, hidden by ?review=0) */
+.luba-state-switcher {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background-color: var(--luba-surface);
+  border: 1px solid var(--luba-border);
+  border-radius: var(--luba-radius-banner);
+  z-index: 20;
+}
+
+.luba-state-switcher button {
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--luba-auth-label);
+  cursor: pointer;
+}
+
+.luba-state-switcher button.is-active { background-color: var(--luba-navy); color: var(--luba-surface); }
+
+/* Tablet: narrow brand panel */
+@media (max-width: 1100px) {
+  .luba-auth-brand { padding: 40px; }
+  .luba-auth-headline { font-size: 34px; }
+}
+
+/* Mobile / tablet (≤ 900px, designed at 390px): brand collapses into navy header strip */
+@media (max-width: 900px) {
+  .luba-auth { flex-direction: column; }
+
+  .luba-auth-brand {
+    flex: 0 0 auto;
+    max-width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+  }
+
+  .luba-auth-logo { height: 40px; align-self: center; }
+  .luba-auth-hero { display: none; }
+  .luba-auth-pattern { opacity: 0.05; }
+
+  .luba-auth-main {
+    align-items: flex-start;
+    padding: 24px 16px 32px;
+  }
+
+  .luba-login-card { width: 100%; padding: 24px; gap: 18px; }
+  .luba-login-title { font-size: 24px; }
+  .luba-state-switcher { left: 8px; right: 8px; bottom: 8px; flex-wrap: wrap; justify-content: center; }
+}
+
+@media (max-width: 360px) {
+  .luba-login-row { flex-direction: column; align-items: flex-start; }
+}
