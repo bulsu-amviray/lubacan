@@ -15,7 +15,8 @@ import {
   listTeams,
   getTeamDetails,
   inviteMaintenancePersonnel,
-  updateMaintenancePersonnel
+  updateMaintenancePersonnel,
+  createTeam
 } from '../controllers/teams.controller.js';
 import {
   listUsers,
@@ -68,6 +69,7 @@ router.get(
 
 // 3. Maintenance Teams & Personnel
 router.get('/teams', requirePermission('teams.view'), listTeams);
+router.post('/teams', requirePermission('teams.manage'), createTeam);
 router.get('/teams/:teamCode', requirePermission('teams.view'), getTeamDetails);
 router.post(
   '/teams/personnel/invite',

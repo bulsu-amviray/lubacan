@@ -50,11 +50,11 @@ export async function getAnalyticsOverview(req, res, next) {
         { month: 'Oct', received: 226, resolved: 84 }
       ],
       roadCorridorSummary: [
-        { roadCorridor: 'Commonwealth Avenue', totalReports: 342, resolved: 162, open: 170, exceptions: 10 },
-        { roadCorridor: 'Batasan Road', totalReports: 218, resolved: 108, open: 104, exceptions: 6 },
-        { roadCorridor: 'Aurora Boulevard', totalReports: 196, resolved: 94, open: 97, exceptions: 5 },
-        { roadCorridor: 'Elliptical Road', totalReports: 142, resolved: 78, open: 60, exceptions: 4 },
-        { roadCorridor: 'Other Quezon City roads', totalReports: 386, resolved: 178, open: 195, exceptions: 13 }
+        { roadCorridor: 'MacArthur Highway (Manila North Road)', totalReports: 342, resolved: 162, open: 170, exceptions: 10 },
+        { roadCorridor: 'Paseo del Congreso', totalReports: 218, resolved: 108, open: 104, exceptions: 6 },
+        { roadCorridor: 'Blas Ople Diversion Road', totalReports: 196, resolved: 94, open: 97, exceptions: 5 },
+        { roadCorridor: 'Malolos–Bulakan Road', totalReports: 142, resolved: 78, open: 60, exceptions: 4 },
+        { roadCorridor: 'Fausta Road / Other Malolos roads', totalReports: 386, resolved: 178, open: 195, exceptions: 13 }
       ]
     });
   } catch (err) {
@@ -122,14 +122,14 @@ export async function downloadReportsCsv(req, res, next) {
       actionCategory: 'DATA_EXPORT',
       actionCode: 'DOWNLOAD_LOCAL_CSV',
       targetEntityType: 'export',
-      targetEntityId: `EXP-QC-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`,
+      targetEntityId: `EXP-MALOLOS-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}`,
       reason: `Direct local CSV download (${rows.length} rows, includeCitizenPii=${includeCitizenPii}).`,
       newValues: { includeCitizenPii, rowCount: rows.length },
       ipAddress: req.ip
     });
 
     const dateSuffix = req.query.snapshotDate || new Date().toISOString().slice(0, 10);
-    const fileName = `LUBA canFindIT_QC_${dateSuffix}.csv`;
+    const fileName = `LUBA canFindIT_Malolos_${dateSuffix}.csv`;
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
     // Prepend UTF-8 BOM (\uFEFF) so Microsoft Excel opens special characters cleanly on local machines
@@ -210,7 +210,7 @@ export async function updateWorkspaceSettings(req, res, next) {
         actionCode: 'UPDATE_WORKSPACE_POLICY',
         targetEntityType: 'workspace',
         targetEntityId: req.user.workspaceId,
-        reason: 'Updated Quezon City reporting rules, SLA targets, and citizen notification policies.',
+        reason: 'Updated City of Malolos reporting rules, SLA targets, and citizen notification policies.',
         newValues: {
           duplicateRadiusMeters,
           slaHighHours,

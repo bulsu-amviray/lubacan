@@ -44,3 +44,18 @@ Desktop.ini
 # Testing & Coverage
 coverage/
 .nyc_output/
+
+# Flutter & Mobile
+.dart_tool/
+.temp/
+build/
+**/android/.gradle/
+**/android/.kotlin/
+**/android/local.properties
+**/android/captures/
+**/android/GeneratedPluginRegistrant.java
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+

@@ -1,0 +1,541 @@
+﻿<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LUBA CanFindIT ┬╖ Malolos City LGU Road Operations Admin System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="./js/config/tailwind.config.js"></script>
+  <link rel="stylesheet" href="./css/luba-reference.css">
+  <link rel="stylesheet" href="./assets/leaflet/leaflet.css">
+  <script src="./assets/leaflet/leaflet.js"></script>
+  <!-- Supabase Web SDK (PostgreSQL Realtime & Storage - Primary Single Source of Truth) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    if (!sessionStorage.getItem('luba_authenticated') && !location.search.includes('screen')) {
+      window.location.replace(location.pathname.includes('/frontend/') ? './login.html' : '/');
+    }
+  </script>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.pointer-events-auto{pointer-events:auto}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.bottom-3{bottom:0.75rem}.left-3{left:0.75rem}.right-3{right:0.75rem}.top-3{top:0.75rem}.bottom-6{bottom:1.5rem}.right-6{right:1.5rem}.z-0{z-index:0}.z-10{z-index:10}.z-\[400\]{z-index:400}.z-50{z-index:50}.col-span-1{grid-column:span 1 / span 1}.col-span-3{grid-column:span 3 / span 3}.col-span-8{grid-column:span 8 / span 8}.mx-2{margin-left:0.5rem;margin-right:0.5rem}.mx-auto{margin-left:auto;margin-right:auto}.mb-6{margin-bottom:1.5rem}.ml-0\.5{margin-left:0.125rem}.mt-0\.5{margin-top:0.125rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.ml-1{margin-left:0.25rem}.mt-1{margin-top:0.25rem}.mt-3{margin-top:0.75rem}.inline-block{display:inline-block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-2{height:0.5rem}.h-3{height:0.75rem}.h-3\.5{height:0.875rem}.h-4{height:1rem}.h-\[18px\]{height:18px}.h-\[52px\]{height:52px}.h-topbar{height:80px}.h-6{height:1.5rem}.h-\[380px\]{height:380px}.h-\[7px\]{height:7px}.h-full{height:100%}.min-h-screen{min-height:100vh}.w-2{width:0.5rem}.w-3{width:0.75rem}.w-3\.5{width:0.875rem}.w-4{width:1rem}.w-\[18px\]{width:18px}.w-auto{width:auto}.w-full{width:100%}.w-sidebar{width:236px}.min-w-0{min-width:0px}.max-w-\[1204px\]{max-width:1204px}.flex-1{flex:1 1 0%}.flex-shrink-0{flex-shrink:0}.shrink-0{flex-shrink:0}.translate-y-2{--tw-translate-y:0.5rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;user-select:none}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-12{grid-template-columns:repeat(12, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-start{justify-content:flex-start}.justify-between{justify-content:space-between}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-5{gap:1.25rem}.gap-1{gap:0.25rem}.gap-4{gap:1rem}.gap-\[2px\]{gap:2px}.space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.space-y-1\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.375rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.375rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-2\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.625rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.625rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.25rem * var(--tw-space-y-reverse))}.overflow-auto{overflow:auto}.overflow-hidden{overflow:hidden}.whitespace-nowrap{white-space:nowrap}.rounded-full{border-radius:9999px}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-\[6px\]{border-radius:6px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-l-4{border-left-width:4px}.border-luba-border{--tw-border-opacity:1;border-color:rgb(220 228 238 / var(--tw-border-opacity, 1))}.border-luba-infoBorder{--tw-border-opacity:1;border-color:rgb(201 221 243 / var(--tw-border-opacity, 1))}.border-white{--tw-border-opacity:1;border-color:rgb(255 255 255 / var(--tw-border-opacity, 1))}.border-blue-900{--tw-border-opacity:1;border-color:rgb(30 58 138 / var(--tw-border-opacity, 1))}.border-l-luba-info{--tw-border-opacity:1;border-left-color:rgb(34 90 145 / var(--tw-border-opacity, 1))}.bg-luba-canvas{--tw-bg-opacity:1;background-color:rgb(243 246 250 / var(--tw-bg-opacity, 1))}.bg-luba-navy{--tw-bg-opacity:1;background-color:rgb(16 45 79 / var(--tw-bg-opacity, 1))}.bg-luba-success{--tw-bg-opacity:1;background-color:rgb(25 118 83 / var(--tw-bg-opacity, 1))}.bg-luba-surface{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-\[\#F8FAFC\]{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-emerald-500{--tw-bg-opacity:1;background-color:rgb(16 185 129 / var(--tw-bg-opacity, 1))}.bg-luba-cta{--tw-bg-opacity:1;background-color:rgb(217 88 32 / var(--tw-bg-opacity, 1))}.bg-luba-danger{--tw-bg-opacity:1;background-color:rgb(185 56 56 / var(--tw-bg-opacity, 1))}.bg-luba-dangerBg{--tw-bg-opacity:1;background-color:rgb(252 234 234 / var(--tw-bg-opacity, 1))}.bg-luba-info{--tw-bg-opacity:1;background-color:rgb(34 90 145 / var(--tw-bg-opacity, 1))}.bg-luba-infoBg{--tw-bg-opacity:1;background-color:rgb(234 242 251 / var(--tw-bg-opacity, 1))}.bg-luba-infoPillBg{--tw-bg-opacity:1;background-color:rgb(232 241 251 / var(--tw-bg-opacity, 1))}.bg-luba-tableHeader{--tw-bg-opacity:1;background-color:rgb(237 242 247 / var(--tw-bg-opacity, 1))}.bg-luba-warningBg{--tw-bg-opacity:1;background-color:rgb(253 243 220 / var(--tw-bg-opacity, 1))}.bg-sky-50\/20{background-color:rgb(240 249 255 / 0.2)}.bg-white\/90{background-color:rgb(255 255 255 / 0.9)}.bg-white\/95{background-color:rgb(255 255 255 / 0.95)}.bg-emerald-400{--tw-bg-opacity:1;background-color:rgb(52 211 153 / var(--tw-bg-opacity, 1))}.object-contain{object-fit:contain}.p-1{padding:0.25rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.px-1{padding-left:0.25rem;padding-right:0.25rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-4{padding-left:1rem;padding-right:1rem}.px-8{padding-left:2rem;padding-right:2rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.px-1\.5{padding-left:0.375rem;padding-right:0.375rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.pb-6{padding-bottom:1.5rem}.pt-0\.5{padding-top:0.125rem}.pt-5{padding-top:1.25rem}.pt-7{padding-top:1.75rem}.pt-1{padding-top:0.25rem}.text-left{text-align:left}.text-right{text-align:right}.font-sans{font-family:Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[13px\]{font-size:13px}.text-xs{font-size:0.75rem;line-height:1rem}.text-base{font-size:1rem;line-height:1.5rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-\[1\.55\]{line-height:1.55}.leading-tight{line-height:1.25}.leading-relaxed{line-height:1.625}.tracking-wider{letter-spacing:0.05em}.text-luba-cta{--tw-text-opacity:1;color:rgb(217 88 32 / var(--tw-text-opacity, 1))}.text-luba-sidebarIcon{--tw-text-opacity:1;color:rgb(159 178 200 / var(--tw-text-opacity, 1))}.text-luba-sidebarMuted{--tw-text-opacity:1;color:rgb(143 163 186 / var(--tw-text-opacity, 1))}.text-luba-sidebarText{--tw-text-opacity:1;color:rgb(207 217 229 / var(--tw-text-opacity, 1))}.text-luba-success{--tw-text-opacity:1;color:rgb(25 118 83 / var(--tw-text-opacity, 1))}.text-luba-textPrimary{--tw-text-opacity:1;color:rgb(15 39 66 / var(--tw-text-opacity, 1))}.text-luba-textSubtle{--tw-text-opacity:1;color:rgb(96 114 135 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-luba-danger{--tw-text-opacity:1;color:rgb(185 56 56 / var(--tw-text-opacity, 1))}.text-luba-info{--tw-text-opacity:1;color:rgb(34 90 145 / var(--tw-text-opacity, 1))}.text-luba-infoText{--tw-text-opacity:1;color:rgb(28 78 128 / var(--tw-text-opacity, 1))}.text-luba-textSecondary{--tw-text-opacity:1;color:rgb(50 71 93 / var(--tw-text-opacity, 1))}.text-luba-warningText{--tw-text-opacity:1;color:rgb(154 99 0 / var(--tw-text-opacity, 1))}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.opacity-0{opacity:0}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.hover\:scale-110:hover{--tw-scale-x:1.1;--tw-scale-y:1.1;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:text-luba-info:hover{--tw-text-opacity:1;color:rgb(34 90 145 / var(--tw-text-opacity, 1))}.hover\:text-luba-textPrimary:hover{--tw-text-opacity:1;color:rgb(15 39 66 / var(--tw-text-opacity, 1))}.hover\:underline:hover{-webkit-text-decoration-line:underline;text-decoration-line:underline}.hover\:opacity-80:hover{opacity:0.8}@media (min-width: 640px){.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}@media (min-width: 1024px){.lg\:col-span-4{grid-column:span 4 / span 4}.lg\:col-span-6{grid-column:span 6 / span 6}.lg\:col-span-8{grid-column:span 8 / span 8}.lg\:grid-cols-12{grid-template-columns:repeat(12, minmax(0, 1fr))}.lg\:grid-cols-5{grid-template-columns:repeat(5, minmax(0, 1fr))}}</style></head>
+
+<body class="bg-luba-canvas text-luba-textPrimary font-sans antialiased min-h-screen flex">
+
+  <!-- Shared Component: Fixed Left Sidebar (236px ┬╖ var(--luba-navy) ┬╖ Full Height) -->
+  <aside id="app-sidebar" class="luba-sidebar w-sidebar min-h-screen bg-luba-navy text-white flex flex-col justify-start px-4 py-6 shrink-0 select-none">
+    <div class="space-y-6">
+      <!-- Brand Logo (Cropped directly from Admin ┬╖ Operations overview.png) -->
+      <div class="px-1 pt-0.5 cursor-pointer" data-screen-jump="1">
+        <img src="/assets/luba-logo.png" alt="LUBA CanFindIT" class="h-[52px] w-auto object-contain">
+      </div>
+
+      <!-- LGU Workspace Selector -->
+      <div class="px-2 space-y-1">
+        <p class="text-[10px] font-semibold uppercase tracking-wider text-luba-sidebarMuted">Malolos City LGU WORKSPACE
+        </p>
+        <p class="text-xs text-luba-sidebarText flex items-center gap-1.5">
+          <span>Malolos City</span>
+          <svg class="w-3 h-3 text-luba-sidebarMuted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"></path>
+          </svg>
+        </p>
+      </div>
+
+      <!-- Primary Navigation (7 items matching the PNG sidebar 1:1) -->
+      <nav class="space-y-1.5" aria-label="Main Navigation">
+        <button type="button" data-nav-section="overview" class="luba-nav-btn luba-nav-btn-active">
+          <span class="flex items-center gap-3">
+            <svg data-nav-icon="overview" class="w-4 h-4 text-luba-cta shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+              <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+              <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+              <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            </svg>
+            <span>Overview</span>
+          </span>
+        </button>
+
+        <button type="button" data-nav-section="reports" class="luba-nav-btn">
+          <span class="flex items-center gap-3">
+            <svg data-nav-icon="reports" class="w-4 h-4 text-luba-sidebarIcon shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
+              <rect x="9" y="3" width="6" height="4" rx="1"></rect>
+              <path d="M9 12h6M9 16h4"></path>
+            </svg>
+            <span>Reports</span>
+          </span>
+          <span class="text-[11px] font-semibold text-luba-cta">98</span>
+        </button>
+
+        <button type="button" data-nav-section="map" class="luba-nav-btn">
+          <span class="flex items-center gap-3">
+            <svg data-nav-icon="map" class="w-4 h-4 text-luba-sidebarIcon shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+            </svg>
+            <span>Pothole map</span>
+          </span>
+        </button>
+
+        <button type="button" data-nav-section="users" class="luba-nav-btn">
+          <span class="flex items-center gap-3">
+            <svg data-nav-icon="users" class="w-4 h-4 text-luba-sidebarIcon shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"></path>
+            </svg>
+            <span>Users</span>
+          </span>
+        </button>
+
+        <button type="button" data-nav-section="teams" class="luba-nav-btn">
+          <span class="flex items-center gap-3">
+            <svg data-nav-icon="teams" class="w-4 h-4 text-luba-sidebarIcon shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path d="M2 18h20M4 18v-5a8 8 0 0116 0v5M10 8V5a2 2 0 014 0v3"></path>
+            </svg>
+            <span>Teams</span>
+          </span>
+        </button>
+
+        <button type="button" data-nav-section="analytics" class="luba-nav-btn">
+          <span class="flex items-center gap-3">
+            <svg data-nav-icon="analytics" class="w-4 h-4 text-luba-sidebarIcon shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path d="M3 3v18h18"></path>
+              <path d="M7 16v-4m5 4V8m5 8v-6"></path>
+            </svg>
+            <span>Analytics</span>
+          </span>
+        </button>
+
+        <button type="button" data-nav-section="settings" class="luba-nav-btn">
+          <span class="flex items-center gap-3">
+            <svg data-nav-icon="settings" class="w-4 h-4 text-luba-sidebarIcon shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <circle cx="9" cy="8" r="2"></circle>
+              <circle cx="15" cy="16" r="2"></circle>
+              <path d="M4 8h3m4 0h9M4 16h9m4 0h3"></path>
+            </svg>
+            <span>Settings</span>
+          </span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Tagline & Demo Note (Positioned directly under Settings as in all 26 PNGs) -->
+      <div class="px-2 pt-5 space-y-4 text-[11px] text-luba-sidebarMuted leading-[1.55]">
+        <p>Built for better roads.<br>One connected workflow from<br>report to verified repair.</p>
+        <p class="uppercase tracking-wider text-[10px] text-luba-sidebarMuted">DEMO ┬╖ SAMPLE DATA</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Right Shell Column (Top Header Bar 80px + Main Viewport + Footer) -->
+  <div id="app-shell-right" class="flex-1 flex flex-col min-w-0 bg-luba-canvas">
+
+    <!-- Shared Component: Top Header Bar (80px ┬╖ var(--luba-surface) ┬╖ Matches PNGs 1:1) -->
+    <header id="app-topbar" class="luba-topbar h-topbar bg-luba-surface border-b border-luba-border px-8 flex items-center justify-between shrink-0">
+      <div id="topbar-breadcrumb" class="text-[13px] text-luba-textSubtle flex items-center">
+      <span>Administration</span>
+      <span class="mx-2 text-luba-textSubtle">/</span>
+      <span>Overview</span>
+    </div>
+
+      <div class="flex items-center gap-5">
+        <span class="text-[13px] text-luba-textSubtle">City of Malolos ┬╖ PHT</span>
+
+        <button type="button" data-screen-jump="25" aria-label="Notifications" class="text-luba-textPrimary hover:text-luba-info transition">
+          <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
+            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 01-3.46 0"></path>
+          </svg>
+        </button>
+
+        <button type="button" data-screen-jump="25" class="flex items-center gap-3 text-left hover:opacity-80 transition">
+          <div>
+            <p id="topbar-admin-name" class="text-[13px] font-bold text-luba-textPrimary leading-tight">Ana Dela Cruz</p>
+            <p id="topbar-admin-role" class="text-xs font-semibold text-luba-textPrimary leading-tight mt-0.5">LGU administrator</p>
+          </div>
+          <svg class="w-3.5 h-3.5 text-luba-textPrimary ml-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area (1200px max width, 32px horizontal padding matching 1440px PNG frame) -->
+    <main id="app-main-container" class="flex-1 max-w-[1204px] w-full mx-auto px-8 pt-7 pb-6">
+      <div id="reference-image-panel" class="mb-6 hidden"></div>
+      <div id="main-viewport">
+    <div class="space-y-5">
+      <!-- Page Header -->
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 class="luba-page-title">City road operations</h1>
+          <p class="luba-page-subtitle">City of Malolos, Bulacan ┬╖ All reports ┬╖ Snapshot as of 21 October 2026, 12:00 PM</p>
+        </div>
+        <button type="button" data-open-modal="export_dialog" class="luba-btn-secondary inline-flex items-center gap-2 px-4 py-2.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"></path></svg>
+          Export summary
+        </button>
+      </div>
+
+      <!-- Info Callout Banner (var(--luba-info-bg) fill, var(--luba-info-border) border, var(--luba-info-text) text, 10px radius) -->
+      
+    <div class="luba-banner luba-banner-info bg-luba-infoBg border-luba-infoBorder text-luba-infoText ">
+      <p class="text-xs font-bold">98 reports need a first review</p>
+      <p class="text-xs mt-0.5 leading-relaxed">56 Submitted + 42 Under Review ┬╖ Prioritize high-severity reports and roads with heavy traffic.</p>
+    </div>
+  
+
+      <!-- 5 KPI Cards Row -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        
+    <div class="luba-card p-4">
+      <p class="text-xs text-luba-textSubtle">Total reports</p>
+      <p class="luba-kpi-value mt-1">1,284</p>
+      <p class="text-[11px] text-luba-textSubtle mt-1">All statuses ┬╖ citywide</p>
+    </div>
+  
+        
+    <div class="luba-card p-4">
+      <p class="text-xs text-luba-textSubtle">Pending review</p>
+      <p class="luba-kpi-value mt-1">98</p>
+      <p class="text-[11px] text-luba-textSubtle mt-1">56 submitted ┬╖ 42 under review</p>
+    </div>
+  
+        
+    <div class="luba-card p-4">
+      <p class="text-xs text-luba-textSubtle">Verified</p>
+      <p class="luba-kpi-value mt-1">186</p>
+      <p class="text-[11px] text-luba-textSubtle mt-1">Ready for team assignment</p>
+    </div>
+  
+        
+    <div class="luba-card p-4">
+      <p class="text-xs text-luba-textSubtle">In progress</p>
+      <p class="luba-kpi-value mt-1">214</p>
+      <p class="text-[11px] text-luba-textSubtle mt-1">Active work / repair review</p>
+    </div>
+  
+        
+    <div class="luba-card p-4">
+      <p class="text-xs text-luba-textSubtle">Resolved</p>
+      <p class="luba-kpi-value mt-1">620</p>
+      <p class="text-[11px] text-luba-textSubtle mt-1">LGU-approved repairs only</p>
+    </div>
+  
+      </div>
+
+      <!-- Status & Severity Distribution Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        <div class="lg:col-span-6">
+          
+    <div class="luba-card p-5">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-base font-bold text-luba-textPrimary">Reports by status</h2>
+        <span class="text-xs text-luba-textSubtle">1,284 total</span>
+      </div>
+      <div class="space-y-3">
+        
+          <div class="grid grid-cols-12 items-center gap-2 text-xs">
+            <span class="col-span-3 text-luba-textSubtle">Submitted</span>
+            <div class="col-span-8 h-[7px] bg-luba-tableHeader rounded-full overflow-hidden">
+              <div class="h-full bg-luba-info rounded-full" style="width: 8%; min-width: 18px"></div>
+            </div>
+            <span class="col-span-1 text-right font-semibold text-luba-textPrimary">56</span>
+          </div>
+        
+          <div class="grid grid-cols-12 items-center gap-2 text-xs">
+            <span class="col-span-3 text-luba-textSubtle">Under Review</span>
+            <div class="col-span-8 h-[7px] bg-luba-tableHeader rounded-full overflow-hidden">
+              <div class="h-full bg-luba-info rounded-full" style="width: 6%; min-width: 14px"></div>
+            </div>
+            <span class="col-span-1 text-right font-semibold text-luba-textPrimary">42</span>
+          </div>
+        
+          <div class="grid grid-cols-12 items-center gap-2 text-xs">
+            <span class="col-span-3 text-luba-textSubtle">Verified</span>
+            <div class="col-span-8 h-[7px] bg-luba-tableHeader rounded-full overflow-hidden">
+              <div class="h-full bg-luba-info rounded-full" style="width: 26%; min-width: 24px"></div>
+            </div>
+            <span class="col-span-1 text-right font-semibold text-luba-textPrimary">186</span>
+          </div>
+        
+          <div class="grid grid-cols-12 items-center gap-2 text-xs">
+            <span class="col-span-3 text-luba-textSubtle">Assigned</span>
+            <div class="col-span-8 h-[7px] bg-luba-tableHeader rounded-full overflow-hidden">
+              <div class="h-full bg-luba-info rounded-full" style="width: 18%; min-width: 20px"></div>
+            </div>
+            <span class="col-span-1 text-right font-semibold text-luba-textPrimary">128</span>
+          </div>
+        
+          <div class="grid grid-cols-12 items-center gap-2 text-xs">
+            <span class="col-span-3 text-luba-textSubtle">In Progress</span>
+            <div class="col-span-8 h-[7px] bg-luba-tableHeader rounded-full overflow-hidden">
+              <div class="h-full bg-luba-cta rounded-full" style="width: 31%; min-width: 28px"></div>
+            </div>
+            <span class="col-span-1 text-right font-semibold text-luba-textPrimary">214</span>
+          </div>
+        
+          <div class="grid grid-cols-12 items-center gap-2 text-xs">
+            <span class="col-span-3 text-luba-textSubtle">Resolved</span>
+            <div class="col-span-8 h-[7px] bg-luba-tableHeader rounded-full overflow-hidden">
+              <div class="h-full bg-luba-success rounded-full" style="width: 72%; min-width: 40px"></div>
+            </div>
+            <span class="col-span-1 text-right font-semibold text-luba-textPrimary">620</span>
+          </div>
+        
+          <div class="grid grid-cols-12 items-center gap-2 text-xs">
+            <span class="col-span-3 text-luba-textSubtle">Rejected</span>
+            <div class="col-span-8 h-[7px] bg-luba-tableHeader rounded-full overflow-hidden">
+              <div class="h-full bg-luba-info rounded-full" style="width: 3.2%; min-width: 10px"></div>
+            </div>
+            <span class="col-span-1 text-right font-semibold text-luba-textPrimary">24</span>
+          </div>
+        
+          <div class="grid grid-cols-12 items-center gap-2 text-xs">
+            <span class="col-span-3 text-luba-textSubtle">Duplicate</span>
+            <div class="col-span-8 h-[7px] bg-luba-tableHeader rounded-full overflow-hidden">
+              <div class="h-full bg-luba-info rounded-full" style="width: 2.2%; min-width: 9px"></div>
+            </div>
+            <span class="col-span-1 text-right font-semibold text-luba-textPrimary">14</span>
+          </div>
+        
+      </div>
+    </div>
+  
+        </div>
+
+        <div class="lg:col-span-6 space-y-4">
+          
+    <div class="luba-card p-5">
+      <h2 class="text-base font-bold text-luba-textPrimary">Severity distribution</h2>
+      <p class="luba-kpi-value mt-1">1,284</p>
+      <p class="text-xs text-luba-textSubtle mb-3">Total reports ┬╖ All severities</p>
+      <div class="w-full h-6 rounded-[6px] overflow-hidden flex gap-[2px] mb-4">
+        <div class="bg-luba-danger h-full" style="width: 32.1%"></div>
+        <div class="bg-luba-cta h-full" style="width: 44.2%"></div>
+        <div class="bg-luba-info h-full" style="width: 23.7%"></div>
+      </div>
+      <div class="space-y-2 text-xs">
+        <div class="flex justify-between"><span class="font-bold text-luba-danger">High</span><span class="text-luba-textSubtle">412 ┬╖ 32.1%</span></div>
+        <div class="flex justify-between"><span class="font-bold text-luba-cta">Medium</span><span class="text-luba-textSubtle">568 ┬╖ 44.2%</span></div>
+        <div class="flex justify-between"><span class="font-bold text-luba-info">Low</span><span class="text-luba-textSubtle">304 ┬╖ 23.7%</span></div>
+      </div>
+      <p class="text-[11px] text-luba-textSubtle mt-3">All reports ┬╖ citywide ┬╖ October 2026 snapshot</p>
+    </div>
+  
+
+          <div class="grid grid-cols-2 gap-4">
+            
+    <div class="luba-card p-4">
+      <p class="text-xs text-luba-textSubtle">Assigned</p>
+      <p class="luba-kpi-value mt-1">128</p>
+      <p class="text-[11px] text-luba-textSubtle mt-1">Awaiting work start</p>
+    </div>
+  
+            
+    <div class="luba-card p-4">
+      <p class="text-xs text-luba-textSubtle">Closed exceptions</p>
+      <p class="luba-kpi-value mt-1">38</p>
+      <p class="text-[11px] text-luba-textSubtle mt-1">24 rejected ┬╖ 14 duplicate</p>
+    </div>
+  
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Map & Needs Attention Row -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start pt-1">
+        <div class="lg:col-span-8 space-y-3">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base font-bold text-luba-textPrimary">Pothole map</h2>
+            <button type="button" data-screen-jump="13" class="luba-btn-secondary inline-flex items-center gap-1.5 px-3 py-1.5">
+              <svg class="w-3.5 h-3.5 text-luba-textPrimary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"></path></svg>
+              <span>Citywide</span>
+            </button>
+          </div>
+          
+    <div class="relative w-full h-[380px] rounded-2xl overflow-hidden border border-luba-border bg-[#F8FAFC] shadow-xs">
+      <div id="overview-leaflet-map" class="w-full h-full z-0 leaflet-container leaflet-touch leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0" style="position: relative;"><div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(0px, 0px, 0px);"><div class="leaflet-pane leaflet-tile-pane"><div class="leaflet-layer " style="z-index: 1;"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 19; transform: translate3d(0px, 0px, 0px) scale(1);"><img alt="" src="https://tile.openstreetmap.de/14/13690/7508.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(106px, 103px, 0px);"><img alt="" src="https://tile.openstreetmap.de/14/13690/7507.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(106px, -153px, 0px);"><img alt="" src="https://tile.openstreetmap.de/14/13689/7508.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-150px, 103px, 0px);"><img alt="" src="https://tile.openstreetmap.de/14/13691/7508.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(362px, 103px, 0px);"><img alt="" src="https://tile.openstreetmap.de/14/13690/7509.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(106px, 359px, 0px);"><img alt="" src="https://tile.openstreetmap.de/14/13689/7507.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-150px, -153px, 0px);"><img alt="" src="https://tile.openstreetmap.de/14/13691/7507.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(362px, -153px, 0px);"><img alt="" src="https://tile.openstreetmap.de/14/13689/7509.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-150px, 359px, 0px);"><img alt="" src="https://tile.openstreetmap.de/14/13691/7509.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(362px, 359px, 0px);"></div></div></div><div class="leaflet-pane leaflet-overlay-pane"></div><div class="leaflet-pane leaflet-shadow-pane"></div><div class="leaflet-pane leaflet-marker-pane"><div class="leaflet-marker-icon custom-pothole-pin-container leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -7px; margin-top: -12px; width: 85px; height: 24px; transform: translate3d(359px, 554px, 0px); z-index: 554;">
+        <div class="flex items-center gap-1.5 cursor-pointer transform transition-transform hover:scale-110 z-10">
+          <span style="background-color: #225A91;" class="w-3.5 h-3.5 rounded-full border-2 border-white shadow-md inline-block shrink-0"></span>
+          <span class="px-1.5 py-0.5 bg-white/95 backdrop-blur-sm rounded-md text-[10px] font-bold shadow-sm border border-luba-border whitespace-nowrap" style="color: #225A91;">
+            7083 ┬╖ Low
+          </span>
+        </div>
+      </div><div class="leaflet-marker-icon custom-pothole-pin-container leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -7px; margin-top: -12px; width: 85px; height: 24px; transform: translate3d(338px, 548px, 0px); z-index: 548;">
+        <div class="flex items-center gap-1.5 cursor-pointer transform transition-transform hover:scale-110 z-10">
+          <span style="background-color: #D95820;" class="w-3.5 h-3.5 rounded-full border-2 border-white shadow-md inline-block shrink-0"></span>
+          <span class="px-1.5 py-0.5 bg-white/95 backdrop-blur-sm rounded-md text-[10px] font-bold shadow-sm border border-luba-border whitespace-nowrap" style="color: #D95820;">
+            0589 ┬╖ Medium
+          </span>
+        </div>
+      </div><div class="leaflet-marker-icon custom-pothole-pin-container leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -7px; margin-top: -12px; width: 85px; height: 24px; transform: translate3d(172px, 300px, 0px); z-index: 300;">
+        <div class="flex items-center gap-1.5 cursor-pointer transform transition-transform hover:scale-110 z-10">
+          <span style="background-color: #225A91;" class="w-3.5 h-3.5 rounded-full border-2 border-white shadow-md inline-block shrink-0"></span>
+          <span class="px-1.5 py-0.5 bg-white/95 backdrop-blur-sm rounded-md text-[10px] font-bold shadow-sm border border-luba-border whitespace-nowrap" style="color: #225A91;">
+            9200 ┬╖ Low
+          </span>
+        </div>
+      </div><div class="leaflet-marker-icon custom-pothole-pin-container leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -7px; margin-top: -12px; width: 85px; height: 24px; transform: translate3d(193px, 348px, 0px); z-index: 348;">
+        <div class="flex items-center gap-1.5 cursor-pointer transform transition-transform hover:scale-110 z-10">
+          <span style="background-color: #B93838;" class="w-3.5 h-3.5 rounded-full border-2 border-white shadow-md inline-block shrink-0"></span>
+          <span class="px-1.5 py-0.5 bg-white/95 backdrop-blur-sm rounded-md text-[10px] font-bold shadow-sm border border-luba-border whitespace-nowrap" style="color: #B93838;">
+            7854 ┬╖ High
+          </span>
+        </div>
+      </div><div class="leaflet-marker-icon custom-pothole-pin-container leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -7px; margin-top: -12px; width: 85px; height: 24px; transform: translate3d(219px, 403px, 0px); z-index: 403;">
+        <div class="flex items-center gap-1.5 cursor-pointer transform transition-transform hover:scale-110 z-10">
+          <span style="background-color: #B93838;" class="w-3.5 h-3.5 rounded-full border-2 border-white shadow-md inline-block shrink-0"></span>
+          <span class="px-1.5 py-0.5 bg-white/95 backdrop-blur-sm rounded-md text-[10px] font-bold shadow-sm border border-luba-border whitespace-nowrap" style="color: #B93838;">
+            2140 ┬╖ High
+          </span>
+        </div>
+      </div><div class="leaflet-marker-icon custom-pothole-pin-container leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -7px; margin-top: -12px; width: 85px; height: 24px; transform: translate3d(176px, 174px, 0px); z-index: 174;">
+        <div class="flex items-center gap-1.5 cursor-pointer transform transition-transform hover:scale-110 z-10">
+          <span style="background-color: #225A91;" class="w-3.5 h-3.5 rounded-full border-2 border-white shadow-md inline-block shrink-0"></span>
+          <span class="px-1.5 py-0.5 bg-white/95 backdrop-blur-sm rounded-md text-[10px] font-bold shadow-sm border border-luba-border whitespace-nowrap" style="color: #225A91;">
+            8862 ┬╖ Low
+          </span>
+        </div>
+      </div><div class="leaflet-marker-icon custom-pothole-pin-container leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -7px; margin-top: -12px; width: 85px; height: 24px; transform: translate3d(3096px, 3951px, 0px); z-index: 3951;">
+        <div class="flex items-center gap-1.5 cursor-pointer transform transition-transform hover:scale-110 z-10">
+          <span style="background-color: #D95820;" class="w-3.5 h-3.5 rounded-full border-2 border-white shadow-md inline-block shrink-0"></span>
+          <span class="px-1.5 py-0.5 bg-white/95 backdrop-blur-sm rounded-md text-[10px] font-bold shadow-sm border border-luba-border whitespace-nowrap" style="color: #D95820;">
+            5453 ┬╖ Medium
+          </span>
+        </div>
+      </div><div class="leaflet-marker-icon custom-pothole-pin-container leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -7px; margin-top: -12px; width: 85px; height: 24px; transform: translate3d(215px, 309px, 0px); z-index: 309;">
+        <div class="flex items-center gap-1.5 cursor-pointer transform transition-transform hover:scale-110 z-10">
+          <span style="background-color: #225A91;" class="w-3.5 h-3.5 rounded-full border-2 border-white shadow-md inline-block shrink-0"></span>
+          <span class="px-1.5 py-0.5 bg-white/95 backdrop-blur-sm rounded-md text-[10px] font-bold shadow-sm border border-luba-border whitespace-nowrap" style="color: #225A91;">
+            6445 ┬╖ Low
+          </span>
+        </div>
+      </div><div class="leaflet-marker-icon custom-pothole-pin-container leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -7px; margin-top: -12px; width: 85px; height: 24px; transform: translate3d(172px, 300px, 0px); z-index: 300;">
+        <div class="flex items-center gap-1.5 cursor-pointer transform transition-transform hover:scale-110 z-10">
+          <span style="background-color: #225A91;" class="w-3.5 h-3.5 rounded-full border-2 border-white shadow-md inline-block shrink-0"></span>
+          <span class="px-1.5 py-0.5 bg-white/95 backdrop-blur-sm rounded-md text-[10px] font-bold shadow-sm border border-luba-border whitespace-nowrap" style="color: #225A91;">
+            2168 ┬╖ Low
+          </span>
+        </div>
+      </div><div class="leaflet-marker-icon custom-pothole-pin-container leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -7px; margin-top: -12px; width: 85px; height: 24px; transform: translate3d(176px, 321px, 0px); z-index: 321;">
+        <div class="flex items-center gap-1.5 cursor-pointer transform transition-transform hover:scale-110 z-10">
+          <span style="background-color: #D95820;" class="w-3.5 h-3.5 rounded-full border-2 border-white shadow-md inline-block shrink-0"></span>
+          <span class="px-1.5 py-0.5 bg-white/95 backdrop-blur-sm rounded-md text-[10px] font-bold shadow-sm border border-luba-border whitespace-nowrap" style="color: #D95820;">
+            4361 ┬╖ Medium
+          </span>
+        </div>
+      </div><div class="leaflet-marker-icon custom-pothole-pin-container leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -7px; margin-top: -12px; width: 85px; height: 24px; transform: translate3d(239px, 196px, 0px); z-index: 196;">
+        <div class="flex items-center gap-1.5 cursor-pointer transform transition-transform hover:scale-110 z-10">
+          <span style="background-color: #B93838;" class="w-3.5 h-3.5 rounded-full border-2 border-white shadow-md inline-block shrink-0"></span>
+          <span class="px-1.5 py-0.5 bg-white/95 backdrop-blur-sm rounded-md text-[10px] font-bold shadow-sm border border-luba-border whitespace-nowrap" style="color: #B93838;">
+            0819 ┬╖ High
+          </span>
+        </div>
+      </div><div class="leaflet-marker-icon custom-pothole-pin-container leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -7px; margin-top: -12px; width: 85px; height: 24px; transform: translate3d(203px, 210px, 0px); z-index: 210;">
+        <div class="flex items-center gap-1.5 cursor-pointer transform transition-transform hover:scale-110 z-10">
+          <span style="background-color: #D95820;" class="w-3.5 h-3.5 rounded-full border-2 border-white shadow-md inline-block shrink-0"></span>
+          <span class="px-1.5 py-0.5 bg-white/95 backdrop-blur-sm rounded-md text-[10px] font-bold shadow-sm border border-luba-border whitespace-nowrap" style="color: #D95820;">
+            0840 ┬╖ Medium
+          </span>
+        </div>
+      </div><div class="leaflet-marker-icon custom-pothole-pin-container leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -7px; margin-top: -12px; width: 85px; height: 24px; transform: translate3d(221px, 174px, 0px); z-index: 174;">
+        <div class="flex items-center gap-1.5 cursor-pointer transform transition-transform hover:scale-110 z-10">
+          <span style="background-color: #225A91;" class="w-3.5 h-3.5 rounded-full border-2 border-white shadow-md inline-block shrink-0"></span>
+          <span class="px-1.5 py-0.5 bg-white/95 backdrop-blur-sm rounded-md text-[10px] font-bold shadow-sm border border-luba-border whitespace-nowrap" style="color: #225A91;">
+            0841 ┬╖ Low
+          </span>
+        </div>
+      </div><div class="leaflet-marker-icon custom-pothole-pin-container leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -7px; margin-top: -12px; width: 85px; height: 24px; transform: translate3d(236px, 193px, 0px); z-index: 193;">
+        <div class="flex items-center gap-1.5 cursor-pointer transform transition-transform hover:scale-110 z-10">
+          <span style="background-color: #B93838;" class="w-3.5 h-3.5 rounded-full border-2 border-white shadow-md inline-block shrink-0"></span>
+          <span class="px-1.5 py-0.5 bg-white/95 backdrop-blur-sm rounded-md text-[10px] font-bold shadow-sm border border-luba-border whitespace-nowrap" style="color: #B93838;">
+            0842 ┬╖ High
+          </span>
+        </div>
+      </div></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"></div><div class="leaflet-proxy leaflet-zoom-animated"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in" aria-disabled="false"><span aria-hidden="true">+</span></a><a class="leaflet-control-zoom-out" href="#" title="Zoom out" role="button" aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">ΓêÆ</span></a></div></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="https://leafletjs.com" title="A JavaScript library for interactive maps"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" class="leaflet-attribution-flag"><path fill="#4C7BE1" d="M0 0h12v4H0z"></path><path fill="#FFD500" d="M0 4h12v3H0z"></path><path fill="#E0BC00" d="M0 7h12v1H0z"></path></svg> Leaflet</a> <span aria-hidden="true">|</span> ┬⌐ <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors</div></div></div></div>
+
+      <!-- Real GPS / Schematic Toggle Switcher -->
+      <div class="absolute top-3 right-3 z-[400] flex items-center bg-white/95 backdrop-blur-sm border border-luba-border rounded-lg p-1 shadow-sm gap-1 text-xs">
+        <button type="button" data-overview-map-toggle="real" class="px-2.5 py-1 rounded font-semibold transition cursor-pointer bg-luba-navy text-white shadow-xs">
+          OpenStreetMap (GPS)
+        </button>
+        <button type="button" data-overview-map-toggle="schematic" class="px-2.5 py-1 rounded font-semibold transition cursor-pointer text-luba-textSecondary hover:text-luba-textPrimary">
+          Schematic View
+        </button>
+      </div>
+
+      <!-- Live GPS Malolos Watermark / Status Badge -->
+      <div class="absolute bottom-3 left-3 z-[400] bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-luba-border shadow-xs text-[11px] text-luba-textSecondary flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="font-semibold text-luba-textPrimary">City of Malolos GPS</span>
+        <span class="text-luba-textSubtle">┬╖ 14.8527┬░ N, 120.8160┬░ E</span>
+      </div>
+    </div>
+  
+          <div class="flex items-center gap-2 text-xs">
+            <span class="luba-badge luba-badge-danger bg-luba-dangerBg text-luba-danger">High</span>
+            <span class="luba-badge luba-badge-warning bg-luba-warningBg text-luba-warningText">Medium</span>
+            <span class="luba-badge luba-badge-info bg-luba-infoPillBg text-luba-info">Low</span>
+            <span class="text-luba-textSubtle ml-1">Guinhawa / MacArthur Hwy corridor ┬╖ City of Malolos GPS</span>
+          </div>
+        </div>
+
+        <div class="lg:col-span-4 space-y-3">
+          <h2 class="text-base font-bold text-luba-textPrimary">Needs attention</h2>
+          <div class="luba-card p-4 space-y-2.5">
+            <span class="luba-badge luba-badge-warning bg-luba-warningBg text-luba-warningText">Awaiting review</span>
+            <p class="text-sm font-bold text-luba-textPrimary">2 repairs ready for inspection</p>
+            <p class="text-xs text-luba-textSubtle">Review before closing the report.</p>
+            <button type="button" data-screen-jump="11" class="luba-btn-secondary inline-flex items-center gap-1.5 px-3.5 py-2">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-5-5l5 5-5 5"></path></svg>
+              Review completion
+            </button>
+          </div>
+          <div class="luba-card p-4 space-y-2">
+            <span class="luba-badge luba-badge-danger bg-luba-dangerBg text-luba-danger">High</span>
+            <p class="text-sm font-bold text-luba-textPrimary">Paseo del Congreso</p>
+            <p class="text-xs text-luba-textSubtle leading-relaxed">RW-2026-0840 ┬╖ In Progress ┬╖ Malolos Team Bravo</p>
+            <button type="button" data-screen-jump="2" class="text-xs font-bold text-luba-cta hover:underline inline-flex items-center gap-1">
+              View priority reports ΓåÆ
+            </button>
+          </div>
+          
+          <div class="luba-card p-4 space-y-2 border-l-4 border-l-luba-info bg-sky-50/20">
+            <div class="flex items-center justify-between">
+              <span class="luba-badge luba-badge-info bg-luba-infoPillBg text-luba-info">Submitted</span>
+              <span class="luba-badge luba-badge-info bg-luba-infoPillBg text-luba-info">Low</span>
+            </div>
+            <p class="text-sm font-bold text-luba-textPrimary">Panasahan</p>
+            <p class="text-xs text-luba-textSubtle leading-relaxed">RW-2026-7083 ┬╖ Catmon ┬╖ Alexa Viray</p>
+            <button type="button" data-open-report="RW-2026-7083" class="text-xs font-bold text-luba-info hover:underline inline-flex items-center gap-1 cursor-pointer">
+              Review new citizen report ΓåÆ
+            </button>
+          </div>
+              
+        </div>
+      </div>
+    </div>
+  </div>
+    </main>
+
+    <!-- Footer (Matches bottom metadata row in the 26 PNG screens) -->
+    <footer id="app-footer" class="max-w-[1204px] w-full mx-auto px-8 py-4 flex flex-wrap items-center justify-between gap-2 text-[11px] text-luba-textSubtle">
+      <span>LUBA canFindIT ┬╖ City Engineering Office, City of Malolos ┬╖ Fictional demonstration data</span>
+      <span id="footer-operational-badge" class="inline-flex items-center gap-1.5 text-luba-success font-medium">
+        <span class="w-2 h-2 rounded-full bg-luba-success"></span>
+        All systems operational
+      </span>
+    </footer>
+  </div>
+
+  <!-- Full-Screen Uploaded PNG Viewer Container -->
+  <div id="full-png-stage" class="hidden flex-1 bg-luba-canvas overflow-auto"></div>
+
+  <!-- Modal Portal -->
+  <div id="modal-portal"></div>
+
+  <script type="module" src="./js/app.js?v=20261030-rocksolid-lifecycle"></script>
+
+
+<div id="toast-portal" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div></body></html>

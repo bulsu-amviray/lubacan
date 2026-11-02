@@ -1,6 +1,8 @@
 import { pool, withTransaction } from '../config/db.js';
 import { recordSystemAudit } from '../middleware/rbac.middleware.js';
 import { isTransitionAllowed } from '../middleware/validate.middleware.js';
+import { syncToFirebase } from '../config/firebase.js';
+import { syncToSupabase } from '../config/supabase.js';
 
 /**
  * GET /api/v1/admin/reports
@@ -407,6 +409,19 @@ export async function verifyReport(req, res, next) {
       };
     });
 
+    // Synchronize report verification/rejection/duplicate outcome to Firebase & Supabase
+    syncToFirebase(`reports/${reportCode}`, {
+      status: result.newStatus,
+      severity: result.confirmedSeverity,
+      verifiedAt: new Date().toISOString()
+    }).catch(() => {});
+
+    syncToSupabase('reports', { code: reportCode }, {
+      status: result.newStatus,
+      severity: result.confirmedSeverity,
+      verified_at: new Date().toISOString()
+    }).catch(() => {});
+
     return res.status(200).json(result);
   } catch (err) {
     return next(err);
@@ -583,6 +598,23 @@ export async function assignRepairTeam(req, res, next) {
       };
     });
 
+    // Synchronize assignment to Firebase & Supabase
+    syncToFirebase(`reports/${reportCode}`, {
+      status: 'Assigned',
+      assignedTeam: result.teamName,
+      assignmentPriority: result.assignmentPriority,
+      targetCompletionAt: result.targetCompletionAt,
+      assignedAt: new Date().toISOString()
+    }).catch(() => {});
+
+    syncToSupabase('reports', { code: reportCode }, {
+      status: 'Assigned',
+      assigned_team: result.teamName,
+      priority: result.assignmentPriority,
+      target_completion: result.targetCompletionAt,
+      assigned_at: new Date().toISOString()
+    }).catch(() => {});
+
     return res.status(200).json(result);
   } catch (err) {
     return next(err);
@@ -707,6 +739,18 @@ export async function reviewRepairCompletion(req, res, next) {
         adminReviewNotes: notes
       };
     });
+
+    // Synchronize resolution to Firebase & Supabase
+    syncToFirebase(`reports/${reportCode}`, {
+      status: result.newStatus,
+      resolvedAt: result.newStatus === 'Resolved' ? new Date().toISOString() : null,
+      adminReviewNotes: result.adminReviewNotes
+    }).catch(() => {});
+
+    syncToSupabase('reports', { code: reportCode }, {
+      status: result.newStatus,
+      resolved_at: result.newStatus === 'Resolved' ? new Date().toISOString() : null
+    }).catch(() => {});
 
     return res.status(200).json(result);
   } catch (err) {

@@ -2,6 +2,8 @@ import crypto from 'crypto';
 import { pool, withTransaction } from '../config/db.js';
 import { recordSystemAudit } from '../middleware/rbac.middleware.js';
 import { PH_MOBILE_REGEX } from '../middleware/validate.middleware.js';
+import { syncToFirebase } from '../config/firebase.js';
+import { syncToSupabase } from '../config/supabase.js';
 
 /**
  * GET /api/v1/admin/teams
@@ -102,6 +104,9 @@ export async function inviteMaintenancePersonnel(req, res, next) {
       mobileNumber,
       roleSlug = 'maintenance_crew',
       teamId = 1,
+      team,
+      area,
+      departmentOrArea,
       sendToWorkEmail = true
     } = req.body;
 
@@ -120,6 +125,8 @@ export async function inviteMaintenancePersonnel(req, res, next) {
       });
     }
 
+    const assignedArea = departmentOrArea || area || team || (roleSlug === 'citizen' ? 'None (Citizen / General)' : 'Malolos Team Alpha');
+
     const result = await withTransaction(async (conn) => {
       const [roles] = await conn.execute(
         `SELECT role_id, role_display_name FROM roles WHERE role_slug = ? LIMIT 1`,
@@ -131,8 +138,8 @@ export async function inviteMaintenancePersonnel(req, res, next) {
         `INSERT INTO users (
            workspace_id, role_id, full_name, email, mobile_number,
            department_or_area, account_status, is_email_verified
-         ) VALUES (?, ?, ?, ?, ?, 'QC North · Alpha', 'Invited', 0)`,
-        [req.user.workspaceId, role.role_id, fullName.trim(), email.trim(), mobileNumber.trim()]
+         ) VALUES (?, ?, ?, ?, ?, ?, 'Invited', 0)`,
+        [req.user.workspaceId, role.role_id, fullName.trim(), email.trim(), mobileNumber.trim(), assignedArea]
       );
 
       const newUserId = insertUser.insertId;
@@ -173,8 +180,34 @@ export async function inviteMaintenancePersonnel(req, res, next) {
       };
     });
 
+    // Synchronize newly invited user to Firebase & Supabase
+    syncToFirebase(`users/${result.userId}`, {
+      id: result.userId,
+      name: result.fullName,
+      email: result.email,
+      mobile: result.mobileNumber,
+      role: result.roleSlug === 'maintenance_lead' ? 'Maintenance lead' : 'Maintenance crew',
+      status: 'Invited',
+      teamId: result.teamId,
+      createdAt: new Date().toISOString()
+    }, 'PUT').catch(() => {});
+
+    syncToSupabase('users', {}, {
+      full_name: result.fullName,
+      email: result.email,
+      mobile: result.mobileNumber,
+      role: result.roleSlug === 'maintenance_lead' ? 'Maintenance lead' : 'Maintenance crew',
+      status: 'Invited'
+    }, 'POST').catch(() => {});
+
     return res.status(201).json(result);
   } catch (err) {
+    if (err.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({
+        error: 'EMAIL_ALREADY_EXISTS',
+        message: `A user with email "${req.body?.email}" already exists in the database.`
+      });
+    }
     return next(err);
   }
 }
@@ -298,7 +331,95 @@ export async function updateMaintenancePersonnel(req, res, next) {
       };
     });
 
+    // Synchronize updated personnel to Firebase & Supabase
+    syncToFirebase(`users/${userId}`, {
+      name: result.fullName,
+      email: result.email,
+      mobile: result.mobileNumber,
+      availability: result.availabilityStatus
+    }).catch(() => {});
+
+    syncToSupabase('users', { email: result.email }, {
+      full_name: result.fullName,
+      mobile: result.mobileNumber
+    }).catch(() => {});
+
     return res.status(200).json(result);
+  } catch (err) {
+    return next(err);
+  }
+}
+
+/**
+ * POST /api/v1/admin/teams
+ * Creates a new maintenance team in MySQL maintenance_teams table.
+ */
+export async function createTeam(req, res, next) {
+  try {
+    const {
+      teamName,
+      districtName = 'Outer / Rural',
+      serviceAreaDescription = 'General Malolos Area',
+      specialty = 'Asphalt & concrete repair',
+      leadUserId = 4
+    } = req.body;
+
+    if (!teamName || !teamName.trim()) {
+      return res.status(422).json({
+        error: 'MISSING_TEAM_NAME',
+        message: 'Team name is required.'
+      });
+    }
+
+    // Use the exact code the Admin UI already saved to Supabase so both databases share one team code.
+    // Otherwise derive a full (non-truncated) slug plus a short unique suffix to avoid "Malolos Team X" collisions.
+    const providedCode = String(req.body.teamCode || '').trim().toUpperCase();
+    const slug = teamName.trim().toUpperCase().replace(/^MALOLOS\s*(TEAM)?\s*/i, '').replace(/[^A-Z0-9]/g, '');
+    const teamCode = /^[A-Z0-9-]{3,32}$/.test(providedCode)
+      ? providedCode
+      : `MALOLOS-${(slug || 'TEAM').slice(0, 14)}-${Date.now().toString(36).toUpperCase().slice(-5)}`;
+    const [insert] = await pool.execute(
+      `INSERT INTO maintenance_teams (
+         workspace_id, team_code, district_name, team_name, lead_user_id,
+         service_area_description, specialty, service_hours, team_status
+       ) VALUES (?, ?, ?, ?, ?, ?, ?, '7:00 AM–4:00 PM PHT', 'Active')`,
+      [req.user.workspaceId, teamCode, districtName, teamName.trim(), leadUserId, serviceAreaDescription, specialty]
+    );
+
+    const newTeamPayload = {
+      code: teamCode,
+      title: teamName.trim(),
+      lead: leadUserId === 9 ? 'Engr. Jessa Morales' : 'Engr. Paolo Santos',
+      serviceArea: `${districtName} (${serviceAreaDescription})`,
+      crewSize: '4 maintenance personnel',
+      specialty,
+      workload: '0 assigned · 0 in progress',
+      status: 'Active',
+      createdAt: new Date().toISOString()
+    };
+
+    // Synchronize newly created team to Firebase & Supabase (Supabase result is awaited and logged)
+    syncToFirebase(`teams/${teamCode}`, newTeamPayload, 'PUT').catch(() => {});
+    const supabaseOk = await syncToSupabase('teams', {}, {
+      code: teamCode,
+      title: teamName.trim(),
+      lead: newTeamPayload.lead,
+      service_area: newTeamPayload.serviceArea,
+      crew_size: newTeamPayload.crewSize,
+      specialty,
+      workload: '0 assigned · 0 in progress',
+      status: 'Active'
+    }, 'POST').catch(() => false);
+    if (!supabaseOk) {
+      console.warn(`[createTeam] Supabase sync did not complete for ${teamCode} (it may already exist or the request failed).`);
+    }
+
+    return res.status(201).json({
+      teamId: insert.insertId,
+      teamCode,
+      teamName: teamName.trim(),
+      supabaseSynced: Boolean(supabaseOk)
+    });
   } catch (err) {
     return next(err);
   }

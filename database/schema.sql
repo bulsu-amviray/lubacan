@@ -40,9 +40,9 @@ DROP TABLE IF EXISTS `workspaces`;
 CREATE TABLE `workspaces` (
   `workspace_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `workspace_code` VARCHAR(32) NOT NULL,
-  `lgu_name` VARCHAR(120) NOT NULL DEFAULT 'Quezon City',
-  `department_name` VARCHAR(160) NOT NULL DEFAULT 'City Engineering Department',
-  `public_hotline` VARCHAR(32) NOT NULL DEFAULT '122',
+  `lgu_name` VARCHAR(120) NOT NULL DEFAULT 'City of Malolos, Bulacan',
+  `department_name` VARCHAR(160) NOT NULL DEFAULT 'City Engineering Office, City of Malolos',
+  `public_hotline` VARCHAR(32) NOT NULL DEFAULT '0000-000-0000',
   `timezone` VARCHAR(64) NOT NULL DEFAULT 'Asia/Manila',
   `duplicate_radius_meters` SMALLINT UNSIGNED NOT NULL DEFAULT 50,
   `sla_high_hours` SMALLINT UNSIGNED NOT NULL DEFAULT 48,
@@ -232,11 +232,12 @@ CREATE TABLE `pothole_reports` (
   `reporter_user_id` BIGINT UNSIGNED NOT NULL,
   `corridor_id` INT UNSIGNED NULL,
   `road_name` VARCHAR(140) NOT NULL,
+  `jurisdiction` ENUM('City', 'DPWH-National') NOT NULL DEFAULT 'City',
   `carriageway_direction` VARCHAR(60) NULL,
   `location_landmark` VARCHAR(220) NOT NULL,
   `barangay_id` SMALLINT UNSIGNED NULL,
   `barangay_name` VARCHAR(100) NOT NULL,
-  `city_name` VARCHAR(100) NOT NULL DEFAULT 'Quezon City',
+  `city_name` VARCHAR(100) NOT NULL DEFAULT 'City of Malolos',
   `latitude` DECIMAL(10,7) NOT NULL,
   `longitude` DECIMAL(10,7) NOT NULL,
   `gps_accuracy_meters` SMALLINT UNSIGNED NOT NULL DEFAULT 8,
@@ -409,7 +410,7 @@ CREATE TABLE `system_audit_logs` (
 -- 8. DATA EXPORTS LOG ("Admin · Export CSV or PDF dialog.png")
 CREATE TABLE `data_exports` (
   `export_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `support_reference` VARCHAR(40) NOT NULL COMMENT 'e.g., EXP-QC-20261021-1203',
+  `support_reference` VARCHAR(40) NOT NULL COMMENT 'e.g., EXP-MALOLOS-20261021-1203',
   `workspace_id` INT UNSIGNED NOT NULL DEFAULT 1,
   `requested_by_user_id` BIGINT UNSIGNED NOT NULL,
   `export_format` ENUM('CSV', 'PDF', 'BOTH') NOT NULL DEFAULT 'CSV',
@@ -424,7 +425,20 @@ CREATE TABLE `data_exports` (
   UNIQUE KEY `uk_exports_support_ref` (`support_reference`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 9. APPEND-ONLY IMMUTABILITY TRIGGERS
+-- 9. CITIZEN POST-REPAIR FEEDBACK (FR-17)
+CREATE TABLE `report_feedback` (
+  `feedback_id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `report_id` BIGINT UNSIGNED NOT NULL,
+  `citizen_user_id` BIGINT UNSIGNED NOT NULL,
+  `rating` TINYINT UNSIGNED NOT NULL COMMENT '1 to 5 stars',
+  `feedback_text` TEXT NULL,
+  `submitted_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`feedback_id`),
+  KEY `idx_feedback_report` (`report_id`),
+  CONSTRAINT `fk_feedback_report` FOREIGN KEY (`report_id`) REFERENCES `pothole_reports` (`report_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 10. APPEND-ONLY IMMUTABILITY TRIGGERS
 DELIMITER $$
 
 CREATE TRIGGER `trg_prevent_report_history_update`

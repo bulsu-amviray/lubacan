@@ -17,7 +17,25 @@ const ICONS = {
 };
 
 const STATES = ['default', 'focus', 'error', 'warning', 'loading'];
-const FILLED = { email: 'ana.delacruz@quezoncity.gov.ph', password: 'correcthorse24' };
+export const VALID_ACCOUNTS = [
+  {
+    email: 'admin@malolos.gov.ph',
+    password: 'admin123',
+    fullName: 'System Administrator',
+    role: 'LGU administrator · City of Malolos',
+    department: 'City Engineering Office'
+  },
+  {
+    email: 'ana.delacruz@malolos.gov.ph',
+    password: 'admin123',
+    altPassword: 'correcthorse24',
+    fullName: 'Ana Dela Cruz',
+    role: 'LGU administrator · City of Malolos',
+    department: 'City Engineering Office'
+  }
+];
+
+const FILLED = { email: 'admin@malolos.gov.ph', password: 'admin123' };
 
 const state = {
   view: 'default',
@@ -98,8 +116,7 @@ function renderCard() {
 
     ${banner}
 
-    ${renderSelectField({ id: 'workspace', label: 'Workspace', options: ['Quezon City'], value: 'Quezon City', disabled: isLoading })}
-    ${renderField({ id: 'email', label: 'Work email', type: 'email', value: state.email, placeholder: 'name@quezoncity.gov.ph', autocomplete: 'username', error: isError, disabled: isLoading })}
+    ${renderField({ id: 'email', label: 'Work email', type: 'email', value: state.email, placeholder: 'admin@malolos.gov.ph', autocomplete: 'username', error: isError, disabled: isLoading })}
     ${renderPasswordField({ value: state.password, focused: v === 'focus', error: isError, disabled: isLoading, visible: state.showPassword })}
 
     <div class="luba-login-row">
@@ -154,17 +171,48 @@ document.addEventListener('input', (e) => {
   if (e.target.id === 'remember') state.remember = e.target.checked;
 });
 
-// Front-end demo flow only (no auth backend exists yet): empty → error, otherwise loading → dashboard.
+// Administrator authentication handler: validates credentials against active administrator accounts.
 document.getElementById('login-card').addEventListener('submit', (e) => {
   e.preventDefault();
-  if (!state.email.trim() || !state.password) {
+  const emailInput = (state.email || '').trim().toLowerCase();
+  const passwordInput = (state.password || '').trim();
+
+  if (!emailInput || !passwordInput) {
     state.view = 'error';
     render();
     return;
   }
+
+  const matched = VALID_ACCOUNTS.find(
+    (acc) =>
+      acc.email.toLowerCase() === emailInput &&
+      (acc.password === passwordInput || acc.altPassword === passwordInput)
+  );
+
+  if (!matched) {
+    state.view = 'error';
+    render();
+    return;
+  }
+
   state.view = 'loading';
   render();
-  setTimeout(() => { location.href = '/?screen=1'; }, 1200);
+
+  sessionStorage.setItem('luba_authenticated', 'true');
+  sessionStorage.setItem(
+    'luba_user',
+    JSON.stringify({
+      email: matched.email,
+      fullName: matched.fullName,
+      role: matched.role,
+      department: matched.department
+    })
+  );
+
+  const targetUrl = location.pathname.includes('/frontend/') || location.pathname.endsWith('login.html')
+    ? './index.html?screen=1'
+    : '/dashboard?screen=1';
+  setTimeout(() => { location.href = targetUrl; }, 1000);
 });
 
 setView(new URLSearchParams(location.search).get('state') || 'default');

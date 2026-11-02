@@ -1,4 +1,4 @@
-export const PH_MOBILE_REGEX = /^\+63\s?9\d{2}\s?\d{3}\s?\d{4}$/;
+export const PH_MOBILE_REGEX = /^(?:\+63|0)?[\s-]?9\d{2}[\s-]?\d{3}[\s-]?\d{4}$|^(?:\+63|0)?9\d{9}$|^\+63\s?9\d{2}\s?\d{3}\s?\d{4}$/;
 
 export const ALLOWED_STATUS_TRANSITIONS = {
   'Submitted': ['Under Review', 'Verified', 'Rejected', 'Duplicate'],

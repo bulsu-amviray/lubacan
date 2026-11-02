@@ -1,31 +1,21 @@
-export const SCREEN_CATALOG = [
-  { id: 1,  key: 'overview',                nav: 'overview',  breadcrumb: ['Administration', 'Overview'],       label: '1 · Operations overview',                   imageFile: 'Admin · Operations overview.png' },
-  { id: 2,  key: 'reports_list',            nav: 'reports',   breadcrumb: ['Administration', 'Reports'],        label: '2 · Reports management',                    imageFile: 'Admin · Reports management.png' },
-  { id: 3,  key: 'report_details',          nav: 'reports',   breadcrumb: ['Administration', 'Reports'],        label: '3 · Report details (RW-2026-0842)',         imageFile: 'Admin · Report details.png' },
-  { id: 4,  key: 'verification_review',     nav: 'reports',   breadcrumb: ['Administration', 'Reports'],        label: '4 · Verification review',                   imageFile: 'Admin · Verification review.png' },
-  { id: 5,  key: 'approve_report_modal',    nav: 'reports',   breadcrumb: ['Administration', 'Reports'],        label: '5 · Approve report confirmation (Modal)',   imageFile: 'Admin · Approve report confirmation.png' },
-  { id: 6,  key: 'reject_report_modal',     nav: 'reports',   breadcrumb: ['Administration', 'Reports'],        label: '6 · Reject report confirmation (Modal)',    imageFile: 'Admin · Reject report confirmation.png' },
-  { id: 7,  key: 'duplicate_outcome_modal', nav: 'reports',   breadcrumb: ['Administration', 'Reports'],        label: '7 · Rejection & duplicate dialog (Modal)',  imageFile: 'Admin · Rejection and duplicate outcome dialog.png' },
-  { id: 8,  key: 'duplicate_comparison',    nav: 'reports',   breadcrumb: ['Administration', 'Reports'],        label: '8 · Duplicate report comparison',           imageFile: 'Admin · Duplicate report comparison.png' },
-  { id: 9,  key: 'team_assignment_modal',   nav: 'reports',   breadcrumb: ['Administration', 'Reports'],        label: '9 · Team assignment modal (Modal)',         imageFile: 'Admin · Team assignment modal.png' },
-  { id: 10, key: 'assignment_confirmed',    nav: 'reports',   breadcrumb: ['Administration', 'Reports'],        label: '10 · Assignment review & confirmation',     imageFile: 'Admin · Assignment review and confirmation.png' },
-  { id: 11, key: 'repair_completion',       nav: 'reports',   breadcrumb: ['Administration', 'Reports'],        label: '11 · Repair completion review',             imageFile: 'Admin · Repair completion review.png' },
-  { id: 12, key: 'report_audit_log',        nav: 'reports',   breadcrumb: ['Administration', 'Reports'],        label: '12 · Report status history & audit log',    imageFile: 'Admin · Report status history and audit log.png' },
-  { id: 13, key: 'pothole_map',             nav: 'map',       breadcrumb: ['Administration', 'Pothole map'],    label: '13 · Pothole map',                          imageFile: 'Admin · Pothole map.png' },
-  { id: 14, key: 'teams_list',              nav: 'teams',     breadcrumb: ['Administration', 'Teams'],          label: '14 · Maintenance team management',          imageFile: 'Admin · Maintenance team management.png' },
-  { id: 15, key: 'team_details',            nav: 'teams',     breadcrumb: ['Administration', 'Teams'],          label: '15 · Maintenance team details (Team Alpha)',imageFile: 'Admin · Maintenance team details.png' },
-  { id: 16, key: 'add_personnel',           nav: 'teams',     breadcrumb: ['Administration', 'Teams'],          label: '16 · Add maintenance personnel (Error state)', imageFile: 'Admin · Add maintenance personnel.png' },
-  { id: 17, key: 'edit_personnel',          nav: 'teams',     breadcrumb: ['Administration', 'Teams'],          label: '17 · Edit maintenance personnel',           imageFile: 'Admin · Edit maintenance personnel.png' },
-  { id: 18, key: 'users_list',              nav: 'users',     breadcrumb: ['Administration', 'Users'],          label: '18 · User management',                      imageFile: 'Admin · User management.png' },
-  { id: 19, key: 'user_details',            nav: 'users',     breadcrumb: ['Administration', 'Users'],          label: '19 · User details & account management',    imageFile: 'Admin · User details and account management.png' },
-  { id: 20, key: 'analytics',               nav: 'analytics', breadcrumb: ['Administration', 'Analytics'],      label: '20 · Analytics and exports',                imageFile: 'Admin · Analytics and exports.png' },
-  { id: 21, key: 'date_range_modal',        nav: 'analytics', breadcrumb: ['Administration', 'Analytics'],      label: '21 · Date-range filters (Error modal)',     imageFile: 'Admin · Date-range filters.png' },
-  { id: 22, key: 'export_dialog_modal',     nav: 'analytics', breadcrumb: ['Administration', 'Analytics'],      label: '22 · Export CSV or PDF dialog (Modal)',     imageFile: 'Admin · Export CSV or PDF dialog.png' },
-  { id: 23, key: 'export_error_modal',      nav: 'analytics', breadcrumb: ['Administration', 'Analytics'],      label: '23 · Export generation error (Modal)',      imageFile: 'Admin · Export generation error.png' },
-  { id: 24, key: 'export_success_modal',    nav: 'analytics', breadcrumb: ['Administration', 'Analytics'],      label: '24 · Export success & local download (Modal)', imageFile: 'Admin · Export success.png' },
-  { id: 25, key: 'admin_profile',           nav: 'settings',  breadcrumb: ['Administration', 'Settings'],       label: '25 · Administrator profile',                imageFile: 'Admin · Administrator profile.png' },
-  { id: 26, key: 'workspace_settings',      nav: 'settings',  breadcrumb: ['Administration', 'Settings'],       label: '26 · Workspace settings',                   imageFile: 'Admin · Workspace settings.png' }
-];
+// Global reactive store and state manager for LUBA CanFindIT (City of Malolos, Bulacan).
+
+import {
+  initialReports,
+  initialAuditLogEvents,
+  initialTeams,
+  initialTeamAlphaCrew,
+  initialUsers
+} from '../data/reports.js';
+import { SCREEN_CATALOG } from '../data/constants.js';
+
+export { SCREEN_CATALOG };
+
+let storedSessionUser = null;
+try {
+  const raw = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('luba_user') : null;
+  if (raw) storedSessionUser = JSON.parse(raw);
+} catch (e) {}
 
 const initialState = {
   currentView: 'overview',
@@ -41,11 +31,18 @@ const initialState = {
     search: '',
     status: 'All statuses',
     severity: 'All severities',
+    jurisdiction: 'All jurisdictions',
+    barangay: 'All barangays',
     month: 'October 2026'
   },
 
   // Selected report for workflow views
   selectedReportCode: 'RW-2026-0842',
+  detailMapViewType: 'real',
+  overviewMapViewType: 'real',
+  reportsViewMode: 'split',
+  reportsMapViewType: 'real',
+  reportsSelectedPin: 'RW-2026-0842',
 
   // Verification Review form state (Screen 4 & 5)
   verificationForm: {
@@ -54,16 +51,16 @@ const initialState = {
     checkJurisdiction: true,
     checkDuplicates: true,
     severity: 'High',
-    notes: 'Location confirmed near IBP Road. Approx. 0.8 m wide and 12 cm deep. High risk to motorcycles; prioritize repair.',
-    modalNotes: 'Location confirmed near IBP Road. High risk to motorcycles.\nRW-2026-0819 is on the opposite carriageway and is not a duplicate.'
+    notes: 'Location confirmed on MacArthur Highway (Manila North Road), Brgy. Guinhawa near BSU crossing. Approx. 0.8 m wide and 12 cm deep. High risk to motorcycles and public transport; DPWH corridor coordinate logged.',
+    modalNotes: 'Location confirmed on MacArthur Highway, Brgy. Guinhawa. High risk to motorcycles and public transport.\nRW-2026-0819 is on the opposite carriageway in Brgy. Tikay and is not a duplicate.'
   },
 
   // Set review outcome modal state (Screens 6 & 7)
   outcomeModal: {
     tab: 'reject', // 'reject' | 'duplicate'
-    rejectionCategory: 'Outside Quezon City jurisdiction',
-    rejectionReason: "The submitted location is on Marcos Highway in Marikina City, outside this Quezon City workspace. The blurred photo also does not clearly show the damage. Please report through the relevant LGU's official channel with clear evidence taken safely.",
-    originalReport: 'RW-2026-0826 · Aurora Boulevard',
+    rejectionCategory: 'Outside City of Malolos jurisdiction',
+    rejectionReason: 'The submitted location is in Bocaue, outside the City of Malolos territorial boundary. Please report through the relevant municipality or provincial DPWH district office with clear evidence taken safely.',
+    originalReport: 'RW-2026-0826 · MacArthur Highway',
     duplicateReason: 'The same pothole is already tracked in RW-2026-0826. Your report has been linked so you can follow its repair updates.'
   },
 
@@ -74,11 +71,11 @@ const initialState = {
 
   // Team Assignment state (Screens 9 & 10)
   assignmentForm: {
-    teamName: 'QC North · Team Alpha',
+    teamName: 'Malolos Team Alpha',
     leadName: 'Engr. Paolo Santos',
     priority: 'High',
     targetCompletion: '21 Oct 2026 · 5:00 PM',
-    instructions: 'Prioritize northbound service road. Set up safety cones and photograph the site before and after repair.'
+    instructions: 'Prioritize MacArthur Highway northbound lane. Set up safety cones and coordinate with local traffic enforcers during asphalt compaction.'
   },
 
   // Repair Completion Inspection state (Screen 11)
@@ -87,7 +84,7 @@ const initialState = {
     checkFilledCompacted: true,
     checkFlushSafe: true,
     checkNotesConsistent: true,
-    reviewNotes: 'Evidence matches the reported site. Patch is level, compacted and clear of debris. Repair accepted for resolution.'
+    reviewNotes: 'Evidence matches the reported site on MacArthur Highway. Patch is level, compacted and clear of debris. Repair accepted for resolution.'
   },
 
   // Report Activity Log filters (Screen 12)
@@ -97,12 +94,13 @@ const initialState = {
     toDate: '21 Oct 2026'
   },
 
-  // Pothole Map filters (Screen 13)
+  // Pothole Map filters (Screen 13) - Default to all reports to match Reports Management
   mapFilters: {
-    search: 'Commonwealth Avenue',
+    search: '',
     status: 'All statuses',
     severity: 'All severities',
-    barangay: 'Batasan Hills',
+    jurisdiction: 'All jurisdictions',
+    barangay: 'All barangays',
     modePill: 'All statuses',
     selectedPinCode: 'RW-2026-0842'
   },
@@ -110,17 +108,27 @@ const initialState = {
   // Teams management filters (Screen 14)
   teamFilters: {
     search: '',
-    district: 'All districts',
+    district: 'All zones',
     status: 'Active teams'
   },
 
-  // Add Maintenance Personnel form state (Screen 16 - defaults to Figma error state)
+  // Create Maintenance Team form state
+  createTeamForm: {
+    teamName: '',
+    district: 'Highway / Commercial Corridor',
+    leadName: 'Engr. Paolo Santos',
+    serviceArea: '',
+    specialty: 'Asphalt patching & concrete re-blocking',
+    serviceHours: '7:00 AM–4:00 PM PHT'
+  },
+
+  // Add Maintenance Personnel form state (Screen 16)
   addPersonnelForm: {
-    fullName: 'Andrea Cruz',
-    email: 'andrea.cruz@example.com',
-    mobileNumber: '+63 917 000',
+    fullName: '',
+    email: '',
+    mobileNumber: '+63 917 000 0215',
     role: 'Maintenance crew',
-    team: 'QC North · Team Alpha',
+    team: 'Malolos Team Alpha',
     sendEmail: true,
     crewOrLeadPill: 'Crew'
   },
@@ -128,10 +136,10 @@ const initialState = {
   // Edit Maintenance Personnel form state (Screen 17)
   editPersonnelForm: {
     fullName: 'Engr. Paolo Santos',
-    email: 'paolo.santos@example.com',
+    email: 'paolo.santos@malolos.gov.ph',
     mobileNumber: '+63 917 000 0210',
     role: 'Maintenance lead',
-    team: 'QC North · Team Alpha',
+    team: 'Malolos Team Alpha',
     availability: 'On duty'
   },
 
@@ -144,6 +152,7 @@ const initialState = {
   },
 
   // User Details Account Status Controls (Screen 19)
+  selectedUserId: 1,
   userStatusForm: {
     currentStatus: 'Active',
     selectedStatus: 'Active',
@@ -173,15 +182,17 @@ const initialState = {
 
   // Administrator Profile state (Screen 25)
   adminProfileForm: {
-    fullName: 'Ana Dela Cruz',
-    email: 'ana.delacruz@example.com',
-    role: 'LGU administrator · Quezon City',
-    department: 'City Engineering',
+    fullName: storedSessionUser?.fullName || 'System Administrator',
+    email: storedSessionUser?.email || 'admin@malolos.gov.ph',
+    role: storedSessionUser?.role || 'LGU administrator · City of Malolos',
+    department: storedSessionUser?.department || 'City Engineering Office',
     reviewQueueAlerts: true,
     completionReviewAlerts: true,
     dailyEmailSummary: false,
     signinSecurityNotices: true,
-    savedBannerVisible: true
+    savedBannerVisible: true,
+    feedbackTitle: 'Preferences saved · sample feedback',
+    feedbackBody: `${storedSessionUser?.fullName || 'System Administrator'} · Personal notifications updated 28 Oct 2026, 8:45 PM PHT. Workspace rules are unchanged.`
   },
 
   // Workspace Settings state (Screen 26)
@@ -197,236 +208,208 @@ const initialState = {
     statusChangeNotifications: true,
     requestPostRepairFeedback: true,
     emailUpdateDigest: false,
-    lguCity: 'Quezon City',
-    department: 'City Engineering Department',
-    hotline: '122',
-    timezone: 'Asia/Manila · UTC+8'
+    lguCity: 'City of Malolos, Bulacan',
+    department: 'City Engineering Office, City of Malolos',
+    hotline: '0000-000-0000',
+    timezone: 'Asia/Manila · UTC+8',
+    workspaceId: 'MALOLOS-LGU-ENG'
   },
 
-  // Primary dataset matching all 26 Figma screens
-  reports: [
-    {
-      code: 'RW-2026-0842',
-      road: 'Commonwealth Avenue',
-      barangay: 'Batasan Hills',
-      severity: 'High',
-      status: 'Under Review',
-      reportedDate: '19 Oct 2026',
-      coordinates: '14.6978° N, 121.0881° E',
-      landmark: 'Northbound service road, near IBP Road, Brgy. Batasan Hills, Quezon City',
-      description: 'Deep pothole on the northbound service road near IBP Road. Motorcycles are swerving around it; water collects after rain.',
-      citizen: {
-        name: 'Mika Reyes',
-        email: 'mika.reyes@example.com',
-        mobile: '+63 917 000 0184'
-      }
-    },
-    {
-      code: 'RW-2026-0841',
-      road: 'Elliptical Road',
-      barangay: 'Central',
-      severity: 'Medium',
-      status: 'Assigned',
-      reportedDate: '19 Oct 2026',
-      coordinates: '14.6515° N, 121.0493° E',
-      landmark: 'Near Quezon Memorial Circle East Gate, Brgy. Central, Quezon City',
-      description: 'Medium surface depression along the outer lane near East Avenue approach.',
-      citizen: {
-        name: 'Luis Mendoza',
-        email: 'luis.mendoza@example.com',
-        mobile: '+63 917 000 0192'
-      }
-    },
-    {
-      code: 'RW-2026-0840',
-      road: 'Batasan Road',
-      barangay: 'Batasan Hills',
-      severity: 'High',
-      status: 'In Progress',
-      reportedDate: '18 Oct 2026',
-      coordinates: '14.6942° N, 121.0915° E',
-      landmark: 'Westbound lane approaching Batasan-San Mateo intersection, Brgy. Batasan Hills',
-      description: 'Severe asphalt crater on Batasan Road westbound lane causing heavy slowdowns.',
-      citizen: {
-        name: 'Mika Reyes',
-        email: 'mika.reyes@example.com',
-        mobile: '+63 917 000 0184'
-      }
-    },
-    {
-      code: 'RW-2026-0839',
-      road: 'Aurora Boulevard',
-      barangay: 'Cubao',
-      severity: 'Low',
-      status: 'Verified',
-      reportedDate: '18 Oct 2026',
-      coordinates: '14.6221° N, 121.0612° E',
-      landmark: 'Near Anonas LRT Station, Brgy. Cubao, Quezon City',
-      description: 'Shallow surface wear along the curb lane near pedestrian crossing.',
-      citizen: {
-        name: 'Bea Navarro',
-        email: 'bea.navarro@example.com',
-        mobile: '+63 917 000 0234'
-      }
-    },
-    {
-      code: 'RW-2026-0838',
-      road: 'Commonwealth Avenue',
-      barangay: 'Holy Spirit',
-      severity: 'Medium',
-      status: 'Submitted',
-      reportedDate: '18 Oct 2026',
-      coordinates: '14.6812° N, 121.0764° E',
-      landmark: 'Near Don Antonio footbridge, Brgy. Holy Spirit, Quezon City',
-      description: 'Cracked asphalt patch reopening along the middle lane.',
-      citizen: {
-        name: 'Ina Villanueva',
-        email: 'ina.villanueva@example.com',
-        mobile: '+63 917 000 0256'
-      }
-    },
-    {
-      code: 'RW-2026-0837',
-      road: 'Visayas Avenue',
-      barangay: 'Vasra',
-      severity: 'Medium',
-      status: 'Resolved',
-      reportedDate: '17 Oct 2026',
-      coordinates: '14.6579° N, 121.0428° E',
-      landmark: 'Near Department of Agriculture gate, Brgy. Vasra, Quezon City',
-      description: 'Pothole near the intersection crosswalk repaired and compacted.',
-      citizen: {
-        name: 'Luis Mendoza',
-        email: 'luis.mendoza@example.com',
-        mobile: '+63 917 000 0192'
-      }
-    },
-    {
-      code: 'RW-2026-0836',
-      road: 'Quirino Highway',
-      barangay: 'Novaliches',
-      severity: 'High',
-      status: 'Rejected',
-      reportedDate: '17 Oct 2026',
-      coordinates: '14.7224° N, 121.0401° E',
-      landmark: 'Near Novaliches Proper boundary, Quezon City',
-      description: 'Submitted photo was taken on a private commercial parking driveway outside LGU road maintenance scope.',
-      citizen: {
-        name: 'Bea Navarro',
-        email: 'bea.navarro@example.com',
-        mobile: '+63 917 000 0234'
-      }
-    },
-    {
-      code: 'RW-2026-0835',
-      road: 'Aurora Boulevard',
-      barangay: 'Project 4',
-      severity: 'Low',
-      status: 'Duplicate',
-      reportedDate: '17 Oct 2026',
-      coordinates: '14.6228° N, 121.0695° E',
-      landmark: 'Aurora Boulevard, Project 4 (12 m from RW-2026-0826)',
-      description: 'Duplicate citizen report of the same pothole on Aurora Boulevard, Project 4.',
-      citizen: {
-        name: 'Ina Villanueva',
-        email: 'ina.villanueva@example.com',
-        mobile: '+63 917 000 0256'
-      }
-    }
-  ],
-
-  auditLogEvents: [
-    { time: '19 Oct · 09:24', actor: 'Mika Reyes',         status: 'Submitted',    note: 'Photo and road pin received.' },
-    { time: '19 Oct · 09:31', actor: 'Ana Dela Cruz',      status: 'Under Review', note: 'Photo and location check opened.' },
-    { time: '19 Oct · 10:15', actor: 'Ana Dela Cruz',      status: 'Verified',     note: 'High severity confirmed; 0819 distinct, 38 m opposite carriageway.' },
-    { time: '19 Oct · 10:30', actor: 'Ana Dela Cruz',      status: 'Assigned',     note: 'Team Alpha · High priority · target 21 Oct, 5 PM.' },
-    { time: '19 Oct · 10:36', actor: 'Engr. Paolo Santos', status: 'Assigned',     note: 'Assignment accepted; no work-start change.' },
-    { time: '20 Oct · 08:05', actor: 'Engr. Paolo Santos', status: 'Assigned',     note: 'Before photo and inspection recorded.' },
-    { time: '20 Oct · 08:10', actor: 'Engr. Paolo Santos', status: 'In Progress',  note: 'Safety checks complete; repair started.' },
-    { time: '21 Oct · 10:35', actor: 'Engr. Paolo Santos', status: 'In Progress',  note: 'Work completed; 1.2 × 1 m patch; 4 bags / ~200 kg asphalt.' },
-    { time: '21 Oct · 10:45', actor: 'Engr. Paolo Santos', status: 'In Progress',  note: 'Completion evidence submitted for admin review.' },
-    { time: '21 Oct · 11:20', actor: 'Ana Dela Cruz',      status: 'Resolved',     note: 'Evidence accepted. Patch level and compacted; lane reopened.' }
-  ],
-
-  teams: [
-    {
-      code: 'QC-NORTH-ALPHA',
-      title: 'QC North · Team Alpha',
-      lead: 'Engr. Paolo Santos',
-      serviceArea: 'Batasan Hills / Commonwealth',
-      crewSize: '4 maintenance personnel',
-      specialty: 'Asphalt patching',
-      workload: '8 assigned · 3 in progress',
-      status: 'Active'
-    },
-    {
-      code: 'QC-NORTH-BRAVO',
-      title: 'QC North · Team Bravo',
-      lead: 'Engr. Jessa Aquino',
-      serviceArea: 'Novaliches / Fairview',
-      crewSize: '6 maintenance personnel',
-      specialty: 'Road resurfacing',
-      workload: '6 assigned · 4 in progress',
-      status: 'Active'
-    },
-    {
-      code: 'QC-CENTRAL-CHARLIE',
-      title: 'QC Central · Team Charlie',
-      lead: 'Engr. Adrian Flores',
-      serviceArea: 'Central / Diliman',
-      crewSize: '5 maintenance personnel',
-      specialty: 'Concrete repair',
-      workload: '4 assigned · 2 in progress',
-      status: 'Active'
-    },
-    {
-      code: 'QC-EAST-DELTA',
-      title: 'QC East · Team Delta',
-      lead: 'Engr. Nica Bautista',
-      serviceArea: 'Cubao / Project 4',
-      crewSize: '5 maintenance personnel',
-      specialty: 'Asphalt patching',
-      workload: '7 assigned · 2 in progress',
-      status: 'Active'
-    }
-  ],
-
-  teamAlphaCrew: [
-    { name: 'Rico Villanueva', specialty: 'Asphalt placement',  availability: 'On duty' },
-    { name: 'Mariel Garcia',   specialty: 'Traffic safety',     availability: 'On duty' },
-    { name: 'Jun Mendoza',     specialty: 'Compactor operator', availability: 'On duty' },
-    { name: 'Liza Bautista',   specialty: 'Site preparation',   availability: 'On duty' }
-  ],
-
-  users: [
-    { id: 1, name: 'Mika Reyes',         email: 'mika.reyes@example.com',     role: 'Citizen',           area: 'Batasan Hills',    status: 'Active' },
-    { id: 2, name: 'Luis Mendoza',       email: 'luis.mendoza@example.com',   role: 'Citizen',           area: 'Central',          status: 'Active' },
-    { id: 3, name: 'Ana Dela Cruz',      email: 'ana.delacruz@example.com',   role: 'LGU administrator', area: 'City Engineering', status: 'Active' },
-    { id: 4, name: 'Engr. Paolo Santos', email: 'paolo.santos@example.com',   role: 'Maintenance lead',  area: 'QC North · Alpha', status: 'Active' },
-    { id: 5, name: 'Bea Navarro',        email: 'bea.navarro@example.com',    role: 'Citizen',           area: 'Cubao',            status: 'Active' },
-    { id: 6, name: 'Carlo Ramos',        email: 'carlo.ramos@example.com',    role: 'Maintenance crew',  area: 'QC North · Bravo', status: 'Active' },
-    { id: 7, name: 'Ina Villanueva',     email: 'ina.villanueva@example.com', role: 'Citizen',           area: 'Holy Spirit',      status: 'Active' },
-    { id: 8, name: 'Marco Lim',          email: 'marco.lim@example.com',      role: 'LGU reviewer',      area: 'City Engineering', status: 'Invited' }
-  ]
+  reports: initialReports,
+  auditLogEvents: initialAuditLogEvents,
+  teams: initialTeams,
+  teamAlphaCrew: initialTeamAlphaCrew,
+  users: initialUsers
 };
 
+export const EXCLUDED_REPORT_CODES = new Set([
+  'RW-2026-0839',
+  'RW-2026-0838',
+  'RW-2026-0837',
+  'RW-2026-0836',
+  'RW-2026-0835',
+  'RW-2026-0798',
+  'RW-2026-0789',
+  'RW-2026-0771',
+  'RW-2026-0745',
+  'RW-2026-0723'
+]);
+
+const STORAGE_KEY = 'luba_admin_inputs_v1';
+
+function filterExcludedReports(reportsList) {
+  if (!Array.isArray(reportsList)) return [];
+  return reportsList.filter((r) => r && !EXCLUDED_REPORT_CODES.has(r.code));
+}
+
+function mergeBaselineReports(reportsList) {
+  const filtered = filterExcludedReports(reportsList);
+  const existingCodes = new Set(filtered.map((r) => r.code));
+  initialReports.forEach((ir) => {
+    if (ir && ir.code && !existingCodes.has(ir.code) && !EXCLUDED_REPORT_CODES.has(ir.code)) {
+      existingCodes.add(ir.code);
+      filtered.push({ ...ir });
+    }
+  });
+
+  // Sort newest reports first by numeric ID desc or creation time desc
+  return filtered.sort((a, b) => {
+    const idA = Number(a.id) || Number(String(a.code || '').replace(/\D/g, '')) || 0;
+    const idB = Number(b.id) || Number(String(b.code || '').replace(/\D/g, '')) || 0;
+    if (idB !== idA) return idB - idA;
+    const timeA = new Date(a.createdAt || a.reportedDate || 0).getTime();
+    const timeB = new Date(b.createdAt || b.reportedDate || 0).getTime();
+    return timeB - timeA;
+  });
+}
+
+function mergeBaselineUsers(userList) {
+  const list = Array.isArray(userList) ? [...userList] : [];
+  const existingEmails = new Set(list.map((u) => (u.email || '').toLowerCase().trim()));
+  initialUsers.forEach((iu) => {
+    if (iu && iu.email && !existingEmails.has(iu.email.toLowerCase().trim())) {
+      existingEmails.add(iu.email.toLowerCase().trim());
+      list.push({ ...iu });
+    }
+  });
+  return list;
+}
+
+function mergeBaselineTeams(teamsList) {
+  const list = Array.isArray(teamsList) ? [...teamsList] : [];
+  const existingCodes = new Set(list.map((t) => t.code));
+  initialTeams.forEach((it) => {
+    if (it && it.code && !existingCodes.has(it.code)) {
+      existingCodes.add(it.code);
+      list.push({ ...it });
+    }
+  });
+  return list;
+}
+
+function loadPersistedState() {
+  if (typeof window === 'undefined' || !window.localStorage) {
+    return structuredClone(initialState);
+  }
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') {
+        const loaded = {
+          ...structuredClone(initialState),
+          ...parsed,
+          activeModal: null
+        };
+        // Always strip excluded sample reports and merge baseline reports
+        loaded.reports = mergeBaselineReports(loaded.reports || initialState.reports);
+        // Always ensure baseline and registered users are present
+        loaded.users = mergeBaselineUsers(loaded.users || initialState.users);
+        // Always ensure baseline teams and synced teams are present
+        loaded.teams = mergeBaselineTeams(loaded.teams || initialState.teams);
+
+        // Ensure map filters match all reports on load (clearing legacy restrictive defaults)
+        if (loaded.mapFilters && (loaded.mapFilters.search === 'MacArthur Highway' || loaded.mapFilters.barangay === 'Guinhawa')) {
+          loaded.mapFilters.search = '';
+          loaded.mapFilters.barangay = 'All barangays';
+        }
+
+        // Reset reportFilters on initial boot so fresh reports from Supabase are never hidden by legacy filter state
+        if (loaded.reportFilters) {
+          loaded.reportFilters.search = '';
+          loaded.reportFilters.status = 'All statuses';
+          loaded.reportFilters.severity = 'All severities';
+          loaded.reportFilters.jurisdiction = 'All jurisdictions';
+          loaded.reportFilters.barangay = 'All barangays';
+        }
+        return loaded;
+      }
+    }
+  } catch (err) {
+    console.warn('[Store] Local persistence load notice:', err);
+  }
+  return structuredClone(initialState);
+}
+
+function persistState(stateToSave) {
+  if (typeof window === 'undefined' || !window.localStorage) return;
+  try {
+    const data = {
+      reports: filterExcludedReports(stateToSave.reports),
+      teams: stateToSave.teams,
+      teamAlphaCrew: stateToSave.teamAlphaCrew,
+      users: stateToSave.users,
+      reportFilters: stateToSave.reportFilters,
+      mapFilters: stateToSave.mapFilters,
+      teamFilters: stateToSave.teamFilters,
+      userFilters: stateToSave.userFilters,
+      selectedReportCode: stateToSave.selectedReportCode,
+      selectedUserId: stateToSave.selectedUserId,
+      verificationForm: stateToSave.verificationForm,
+      outcomeModal: stateToSave.outcomeModal,
+      duplicateCompareForm: stateToSave.duplicateCompareForm,
+      assignmentForm: stateToSave.assignmentForm,
+      completionForm: stateToSave.completionForm,
+      addPersonnelForm: stateToSave.addPersonnelForm,
+      editPersonnelForm: stateToSave.editPersonnelForm,
+      createTeamForm: stateToSave.createTeamForm,
+      userStatusForm: stateToSave.userStatusForm,
+      analyticsState: stateToSave.analyticsState,
+      detailMapViewType: stateToSave.detailMapViewType,
+      overviewMapViewType: stateToSave.overviewMapViewType,
+      reportsViewMode: stateToSave.reportsViewMode,
+      reportsMapViewType: stateToSave.reportsMapViewType,
+      exportForm: stateToSave.exportForm,
+      adminProfileForm: stateToSave.adminProfileForm,
+      workspaceSettingsForm: stateToSave.workspaceSettingsForm
+    };
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (err) {
+    console.warn('[Store] Local persistence write notice:', err);
+  }
+}
+
 const listeners = new Set();
-let state = structuredClone(initialState);
+let state = loadPersistedState();
 
 export const store = {
   getState() {
     return state;
   },
   setState(updater) {
+    const prevState = { ...state };
     const nextPartial = typeof updater === 'function' ? updater(state) : updater;
+    if (nextPartial && nextPartial.reports) {
+      nextPartial.reports = filterExcludedReports(nextPartial.reports);
+    }
     state = { ...state, ...nextPartial };
+    persistState(state);
+
     listeners.forEach((fn) => fn(state));
+  },
+  setSilentState(updater) {
+    const prevState = { ...state };
+    const nextPartial = typeof updater === 'function' ? updater(state) : updater;
+    if (nextPartial && nextPartial.reports) {
+      nextPartial.reports = filterExcludedReports(nextPartial.reports);
+    }
+    state = { ...state, ...nextPartial };
+    persistState(state);
   },
   subscribe(listener) {
     listeners.add(listener);
     return () => listeners.delete(listener);
   },
   navigateToScreen(screenId) {
+    if (screenId === 'create_team') {
+      this.setState({
+        activeScreenId: 14,
+        currentView: 'create_team',
+        activeModal: null
+      });
+      return;
+    }
+
     const numId = Number(screenId);
     const entry = SCREEN_CATALOG.find((s) => s.id === numId) || SCREEN_CATALOG[0];
 

@@ -1,0 +1,29 @@
+$ftpServer = "ftpupload.net"
+$user = "if0_43334610"
+$pass = "FPyoZMzCtjr"
+$cred = New-Object System.Net.NetworkCredential($user, $pass)
+
+function Upload-FtpFile($localFile, $remoteUri) {
+    $req = [System.Net.FtpWebRequest]::Create($remoteUri)
+    $req.Credentials = $cred
+    $req.Method = [System.Net.WebRequestMethods+Ftp]::UploadFile
+    $req.UseBinary = $true
+    $req.UsePassive = $true
+    $req.KeepAlive = $false
+
+    $bytes = [System.IO.File]::ReadAllBytes($localFile)
+    $req.ContentLength = $bytes.Length
+    $stream = $req.GetRequestStream()
+    $stream.Write($bytes, 0, $bytes.Length)
+    $stream.Close()
+    $resp = $req.GetResponse()
+    $resp.Close()
+    Write-Host "Uploaded: $remoteUri"
+}
+
+Upload-FtpFile "c:\xampp\htdocs\LUBACanFindIT\frontend\login.html" "ftp://$ftpServer/htdocs/login.html"
+Upload-FtpFile "c:\xampp\htdocs\LUBACanFindIT\frontend\index.html" "ftp://$ftpServer/htdocs/index.html"
+Upload-FtpFile "c:\xampp\htdocs\LUBACanFindIT\frontend\js\app.js" "ftp://$ftpServer/htdocs/js/app.js"
+Upload-FtpFile "c:\xampp\htdocs\LUBACanFindIT\frontend\js\login.js" "ftp://$ftpServer/htdocs/js/login.js"
+
+Write-Host "All auth & entry files uploaded to InfinityFree successfully!"

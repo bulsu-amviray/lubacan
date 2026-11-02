@@ -1,5 +1,7 @@
 import { pool, withTransaction } from '../config/db.js';
 import { recordSystemAudit } from '../middleware/rbac.middleware.js';
+import { syncToFirebase } from '../config/firebase.js';
+import { syncToSupabase } from '../config/supabase.js';
 
 /**
  * GET /api/v1/admin/users
@@ -193,6 +195,18 @@ export async function updateUserAccountStatus(req, res, next) {
       };
     });
 
+    // Synchronize user status update to Firebase & Supabase
+    syncToFirebase(`users/${userId}`, {
+      status: result.newStatus,
+      lastStatusReason: result.reason,
+      statusUpdatedAt: new Date().toISOString()
+    }).catch(() => {});
+
+    syncToSupabase('users', { id: userId }, {
+      status: result.newStatus,
+      updated_at: new Date().toISOString()
+    }).catch(() => {});
+
     return res.status(200).json(result);
   } catch (err) {
     return next(err);
@@ -216,8 +230,8 @@ export async function getAdminProfile(req, res, next) {
         userId: req.user.userId,
         fullName: req.user.fullName,
         email: req.user.email,
-        roleDisplay: `${req.user.roleDisplayName} · Quezon City`,
-        department: req.user.department || 'City Engineering',
+        roleDisplay: `${req.user.roleDisplayName} · City of Malolos`,
+        department: req.user.department || 'City Engineering Office, City of Malolos',
         accountStatus: req.user.accountStatus
       },
       preferences: prefs[0] || {
@@ -237,9 +251,15 @@ export async function updateAdminProfilePreferences(req, res, next) {
     const {
       reviewQueueAlerts = true,
       completionReviewAlerts = true,
-      dailyEmailSummary = false
+      dailyEmailSummary = false,
+      fullName,
+      email,
+      department
     } = req.body;
 
+    const userId = req.user?.userId || 1;
+
+    // Update notification preferences
     await pool.execute(
       `INSERT INTO user_notification_preferences (
          user_id, review_queue_alerts, completion_review_alerts, daily_email_summary, signin_security_notices
@@ -249,12 +269,40 @@ export async function updateAdminProfilePreferences(req, res, next) {
          completion_review_alerts = VALUES(completion_review_alerts),
          daily_email_summary = VALUES(daily_email_summary),
          signin_security_notices = 1`,
-      [req.user.userId, reviewQueueAlerts ? 1 : 0, completionReviewAlerts ? 1 : 0, dailyEmailSummary ? 1 : 0]
+      [userId, reviewQueueAlerts ? 1 : 0, completionReviewAlerts ? 1 : 0, dailyEmailSummary ? 1 : 0]
     );
+
+    // Update user identity fields if provided
+    if (fullName || email || department) {
+      const updates = [];
+      const params = [];
+      if (fullName) { updates.push('full_name = ?'); params.push(fullName); }
+      if (email) { updates.push('email = ?'); params.push(email); }
+      if (department) { updates.push('department_or_area = ?'); params.push(department); }
+      if (updates.length > 0) {
+        params.push(userId);
+        await pool.execute(`UPDATE users SET ${updates.join(', ')} WHERE user_id = ?`, params);
+      }
+    }
+
+    const savedName = fullName || req.user?.fullName || 'Ana Dela Cruz';
+
+    // Synchronize Admin Profile and Settings to Firebase RTDB
+    syncToFirebase('settings/adminProfile', {
+      fullName: savedName,
+      email: email || undefined,
+      role: role || undefined,
+      department: department || undefined,
+      reviewQueueAlerts: Boolean(reviewQueueAlerts),
+      completionReviewAlerts: Boolean(completionReviewAlerts),
+      dailyEmailSummary: Boolean(dailyEmailSummary),
+      signinSecurityNotices: true,
+      updatedAt: new Date().toISOString()
+    }).catch(() => {});
 
     return res.status(200).json({
       saved: true,
-      feedbackMessage: `${req.user.fullName} · Personal notifications updated 21 Oct 2026, 12:05 PM PHT. Workspace rules are unchanged.`,
+      feedbackMessage: `${savedName} · Personal notifications updated 21 Oct 2026, 12:05 PM PHT. Workspace rules are unchanged.`,
       preferences: {
         reviewQueueAlerts: Boolean(reviewQueueAlerts),
         completionReviewAlerts: Boolean(completionReviewAlerts),

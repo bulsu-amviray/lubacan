@@ -1,0 +1,474 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Complete Canonical Firebase RTDB Schema Export for LUBA CanFindIT (City of Malolos, Bulacan)
+const fullExport = {
+  "_metadata": {
+    "system": "LUBA CanFindIT",
+    "jurisdiction": "City of Malolos, Bulacan",
+    "department": "City Engineering Office",
+    "firebaseUrl": "https://lubacanfindit-default-rtdb.firebaseio.com/",
+    "schemaVersion": "2.0.0",
+    "exportedAt": new Date().toISOString(),
+    "description": "Complete normalized schema matching MySQL luba_canfindit database for live multi-client synchronization across Web Admin, Citizen Mobile App, and Maintenance Mobile App."
+  },
+
+  "settings": {
+    "workspace": {
+      "workspaceCode": "MALOLOS-LGU-ENG",
+      "lguCity": "City of Malolos, Bulacan",
+      "department": "City Engineering Office, City of Malolos",
+      "hotline": "0000-000-0000",
+      "timezone": "Asia/Manila (UTC+8)",
+      "duplicateRadius": "50 meters",
+      "duplicateRadiusMeters": 50,
+      "highTarget": "48 hours",
+      "mediumTarget": "5 days",
+      "lowTarget": "14 days",
+      "requirePhoto": true,
+      "adminVerificationBeforeResolution": true,
+      "enableNearbyDuplicateChecks": true,
+      "statusChangeNotifications": true,
+      "requestPostRepairFeedback": true,
+      "emailUpdateDigest": false,
+      "updatedAt": "2026-10-21T08:00:00.000Z"
+    },
+    "adminProfile": {
+      "userId": 3,
+      "fullName": "Ana Dela Cruz",
+      "email": "ana.delacruz@malolos.gov.ph",
+      "role": "LGU administrator · City of Malolos",
+      "department": "City Engineering Office",
+      "reviewQueueAlerts": true,
+      "completionReviewAlerts": true,
+      "dailyEmailSummary": false,
+      "signinSecurityNotices": true,
+      "updatedAt": "2026-10-21T12:05:00.000Z"
+    }
+  },
+
+  "teams": {
+    "MALOLOS-ALPHA": {
+      "code": "MALOLOS-ALPHA",
+      "title": "Malolos Team Alpha",
+      "district": "Highway / Commercial Corridor",
+      "lead": "Engr. Paolo Santos",
+      "leadEmail": "paolo.santos@malolos.gov.ph",
+      "leadMobile": "+63 917 000 0210",
+      "leadAvailability": "On duty",
+      "serviceArea": "Highway / Commercial Corridor (Guinhawa / Bulihan / Tikay / Sumapang Matanda)",
+      "crewSize": "4 maintenance personnel",
+      "specialty": "Asphalt patching & concrete re-blocking",
+      "serviceHours": "7:00 AM–4:00 PM PHT",
+      "workload": "8 assigned · 3 in progress",
+      "status": "Active",
+      "crewMembers": [
+        { "name": "Engr. Paolo Santos", "role": "Lead", "specialty": "Inspection & pavement compaction", "availability": "On duty" },
+        { "name": "Aris Tolentino", "role": "Crew", "specialty": "Cold mix / hot asphalt application", "availability": "On duty" },
+        { "name": "Ramil Bautista", "role": "Crew", "specialty": "Surface grading & plate compaction", "availability": "On duty" },
+        { "name": "Danilo Cruz", "role": "Crew", "specialty": "Work-zone safety & traffic control", "availability": "On duty" }
+      ],
+      "updatedAt": new Date().toISOString()
+    },
+    "MALOLOS-BRAVO": {
+      "code": "MALOLOS-BRAVO",
+      "title": "Malolos Team Bravo",
+      "district": "Poblacion / Rural",
+      "lead": "Engr. Jessa Aquino",
+      "leadEmail": "jessa.aquino@malolos.gov.ph",
+      "leadMobile": "+63 917 000 0211",
+      "leadAvailability": "On duty",
+      "serviceArea": "Poblacion / Rural (Barasoain / San Vicente / Santo Rosario / Mabolo / Atlag)",
+      "crewSize": "6 maintenance personnel",
+      "specialty": "Drainage cover restoration & patching",
+      "serviceHours": "7:00 AM–4:00 PM PHT",
+      "workload": "6 assigned · 4 in progress",
+      "status": "Active",
+      "crewMembers": [
+        { "name": "Engr. Jessa Aquino", "role": "Lead", "specialty": "Structural drainage & concrete repair", "availability": "On duty" },
+        { "name": "Mark Alcantara", "role": "Crew", "specialty": "Manhole restoration & masonry", "availability": "On duty" },
+        { "name": "Rolando Manalo", "role": "Crew", "specialty": "Concrete re-blocking & joint sealing", "availability": "On duty" },
+        { "name": "Eduardo Ramos", "role": "Crew", "specialty": "Asphalt patching & edge repair", "availability": "On duty" }
+      ],
+      "updatedAt": new Date().toISOString()
+    },
+    "MALOLOS-CHARLIE": {
+      "code": "MALOLOS-CHARLIE",
+      "title": "Malolos Team Charlie",
+      "district": "Outer / Rural",
+      "lead": "Engr. Adrian Flores",
+      "leadEmail": "adrian.flores@malolos.gov.ph",
+      "leadMobile": "+63 917 000 0212",
+      "leadAvailability": "On duty",
+      "serviceArea": "Outer / Rural (Lugam / Santor / Bungahan / Mojon)",
+      "crewSize": "4 maintenance personnel",
+      "specialty": "Emergency road pothole response",
+      "serviceHours": "7:00 AM–4:00 PM PHT",
+      "workload": "0 assigned · 0 in progress",
+      "status": "Active",
+      "updatedAt": new Date().toISOString()
+    },
+    "MALOLOS-DELTA": {
+      "code": "MALOLOS-DELTA",
+      "title": "Malolos Team Delta",
+      "district": "Highway / Commercial Corridor",
+      "lead": "Engr. Nica Bautista",
+      "leadEmail": "nica.bautista@malolos.gov.ph",
+      "leadMobile": "+63 917 000 0214",
+      "leadAvailability": "On duty",
+      "serviceArea": "Highway / Commercial Corridor (San Vicente / Barasoain / Bulihan)",
+      "crewSize": "4 maintenance personnel",
+      "specialty": "Road surface re-blocking & joint sealing",
+      "serviceHours": "7:00 AM–4:00 PM PHT",
+      "workload": "0 assigned · 0 in progress",
+      "status": "Active",
+      "updatedAt": new Date().toISOString()
+    }
+  },
+
+  "users": {
+    "1": {
+      "id": 1,
+      "name": "Maria Santos",
+      "email": "maria.santos@malolos.gov.ph",
+      "mobile": "+63 917 000 0110",
+      "role": "LGU reviewer",
+      "roleSlug": "lgu_reviewer",
+      "department": "City Engineering Office",
+      "area": "City Engineering Office",
+      "status": "Active",
+      "createdAt": "2026-05-10T08:00:00.000Z"
+    },
+    "2": {
+      "id": 2,
+      "name": "Juan Dela Cruz",
+      "email": "juan.delacruz@citizen.ph",
+      "mobile": "+63 917 000 0102",
+      "role": "Citizen",
+      "roleSlug": "citizen",
+      "department": "None (Citizen / General)",
+      "area": "Brgy. Guinhawa",
+      "status": "Active",
+      "createdAt": "2026-06-01T08:00:00.000Z"
+    },
+    "3": {
+      "id": 3,
+      "name": "Ana Dela Cruz",
+      "email": "ana.delacruz@malolos.gov.ph",
+      "mobile": "+63 917 000 0101",
+      "role": "LGU administrator",
+      "roleSlug": "lgu_admin",
+      "department": "City Engineering Office",
+      "area": "City Engineering Office",
+      "status": "Active",
+      "createdAt": "2026-05-01T08:00:00.000Z"
+    },
+    "4": {
+      "id": 4,
+      "name": "Engr. Paolo Santos",
+      "email": "paolo.santos@malolos.gov.ph",
+      "mobile": "+63 917 000 0210",
+      "role": "Maintenance lead",
+      "roleSlug": "maintenance_lead",
+      "department": "Malolos Team Alpha",
+      "area": "Malolos Team Alpha",
+      "teamCode": "MALOLOS-ALPHA",
+      "status": "Active",
+      "createdAt": "2026-05-01T08:00:00.000Z"
+    },
+    "5": {
+      "id": 5,
+      "name": "Mika Reyes",
+      "email": "mika.reyes@malolos.gov.ph",
+      "mobile": "+63 917 000 0184",
+      "role": "Citizen",
+      "roleSlug": "citizen",
+      "department": "None (Citizen / General)",
+      "area": "Brgy. Guinhawa",
+      "status": "Active",
+      "createdAt": "2026-08-15T08:00:00.000Z"
+    },
+    "6": {
+      "id": 6,
+      "name": "Luis Mendoza",
+      "email": "luis.mendoza@malolos.gov.ph",
+      "mobile": "+63 917 000 0192",
+      "role": "Citizen",
+      "roleSlug": "citizen",
+      "department": "None (Citizen / General)",
+      "area": "Brgy. Guinhawa",
+      "status": "Active",
+      "createdAt": "2026-08-20T08:00:00.000Z"
+    },
+    "7": {
+      "id": 7,
+      "name": "Bea Navarro",
+      "email": "bea.navarro@malolos.gov.ph",
+      "mobile": "+63 917 000 0234",
+      "role": "Citizen",
+      "roleSlug": "citizen",
+      "department": "None (Citizen / General)",
+      "area": "Brgy. Mabolo",
+      "status": "Active",
+      "createdAt": "2026-09-01T08:00:00.000Z"
+    },
+    "8": {
+      "id": 8,
+      "name": "Ina Villanueva",
+      "email": "ina.villanueva@malolos.gov.ph",
+      "mobile": "+63 917 000 0256",
+      "role": "Citizen",
+      "roleSlug": "citizen",
+      "department": "None (Citizen / General)",
+      "area": "Brgy. Bulihan",
+      "status": "Active",
+      "createdAt": "2026-09-10T08:00:00.000Z"
+    }
+  },
+
+  "reports": {
+    "RW-2026-0842": {
+      "code": "RW-2026-0842",
+      "road": "MacArthur Highway (Manila North Road)",
+      "jurisdiction": "DPWH-National",
+      "carriageway": "Northbound",
+      "barangay": "Guinhawa",
+      "city": "City of Malolos",
+      "severity": "High",
+      "status": "Under Review",
+      "reportedDate": "19 Oct 2026",
+      "submittedAt": "2026-10-19T09:14:00.000Z",
+      "coordinates": "14.8524° N, 120.8168° E",
+      "latitude": 14.8524,
+      "longitude": 120.8168,
+      "gpsAccuracyMeters": 8,
+      "landmark": "Northbound lane near BSU crossing / Capitol junction, Brgy. Guinhawa, City of Malolos, Bulacan",
+      "description": "Deep asphalt pothole along MacArthur Highway northbound lane. Motorcycles and jeepneys swerve into oncoming traffic; water collects during rain.",
+      "estimatedDimensions": "0.8 m wide · 12.0 cm deep",
+      "citizen": {
+        "userId": 5,
+        "name": "Mika Reyes",
+        "email": "mika.reyes@malolos.gov.ph",
+        "mobile": "+63 917 000 0184"
+      },
+      "media": [
+        {
+          "stage": "CitizenSubmission",
+          "url": "https://storage.googleapis.com/luba-canfindit/reports/rw-2026-0842-citizen.jpg",
+          "sizeBytes": 2516582,
+          "mimeType": "image/jpeg"
+        }
+      ],
+      "verificationChecklist": {
+        "checkPhoto": true,
+        "checkPin": true,
+        "checkJurisdiction": true,
+        "checkDuplicates": true
+      },
+      "updatedAt": new Date().toISOString()
+    },
+    "RW-2026-0841": {
+      "code": "RW-2026-0841",
+      "road": "Capitol Compound Road",
+      "jurisdiction": "City",
+      "carriageway": "Eastbound",
+      "barangay": "Guinhawa",
+      "city": "City of Malolos",
+      "severity": "Medium",
+      "status": "Assigned",
+      "reportedDate": "19 Oct 2026",
+      "submittedAt": "2026-10-19T08:40:00.000Z",
+      "coordinates": "14.8512° N, 120.8145° E",
+      "latitude": 14.8512,
+      "longitude": 120.8145,
+      "landmark": "Provincial Capitol building approach road, Brgy. Guinhawa, City of Malolos",
+      "description": "Surface depression and broken pavement near the government center exit gate.",
+      "assignedTeam": "Malolos Team Alpha",
+      "assignedTeamCode": "MALOLOS-ALPHA",
+      "assignmentPriority": "High",
+      "targetCompletionAt": "2026-10-21T17:00:00.000Z",
+      "citizen": {
+        "userId": 6,
+        "name": "Luis Mendoza",
+        "email": "luis.mendoza@malolos.gov.ph",
+        "mobile": "+63 917 000 0192"
+      },
+      "updatedAt": new Date().toISOString()
+    },
+    "RW-2026-0840": {
+      "code": "RW-2026-0840",
+      "road": "Paseo del Congreso",
+      "jurisdiction": "City",
+      "carriageway": "Westbound",
+      "barangay": "San Vicente (Poblacion)",
+      "city": "City of Malolos",
+      "severity": "High",
+      "status": "In Progress",
+      "reportedDate": "18 Oct 2026",
+      "submittedAt": "2026-10-18T15:20:00.000Z",
+      "coordinates": "14.8465° N, 120.8122° E",
+      "latitude": 14.8465,
+      "longitude": 120.8122,
+      "landmark": "Barasoain Church plaza frontage, Brgy. San Vicente (Poblacion)",
+      "description": "Damaged concrete slab and edge subsidence causing traffic slowdown along Paseo del Congreso.",
+      "assignedTeam": "Malolos Team Alpha",
+      "assignedTeamCode": "MALOLOS-ALPHA",
+      "citizen": {
+        "userId": 5,
+        "name": "Mika Reyes",
+        "email": "mika.reyes@malolos.gov.ph",
+        "mobile": "+63 917 000 0184"
+      },
+      "updatedAt": new Date().toISOString()
+    },
+    "RW-2026-0839": {
+      "code": "RW-2026-0839",
+      "road": "Fausta Road / Mabolo–San Jose Road",
+      "jurisdiction": "City",
+      "carriageway": "Eastbound",
+      "barangay": "Mabolo",
+      "city": "City of Malolos",
+      "severity": "Low",
+      "status": "Verified",
+      "reportedDate": "18 Oct 2026",
+      "submittedAt": "2026-10-18T13:10:00.000Z",
+      "coordinates": "14.8385° N, 120.8220° E",
+      "latitude": 14.8385,
+      "longitude": 120.8220,
+      "landmark": "Near Mabolo Elementary School, Brgy. Mabolo, City of Malolos",
+      "description": "Minor asphalt wearing and small raveling along the shoulder.",
+      "citizen": {
+        "userId": 7,
+        "name": "Bea Navarro",
+        "email": "bea.navarro@malolos.gov.ph",
+        "mobile": "+63 917 000 0234"
+      },
+      "updatedAt": new Date().toISOString()
+    },
+    "RW-2026-0838": {
+      "code": "RW-2026-0838",
+      "road": "MacArthur Highway (Manila North Road)",
+      "jurisdiction": "DPWH-National",
+      "carriageway": "Southbound",
+      "barangay": "Bulihan",
+      "city": "City of Malolos",
+      "severity": "Medium",
+      "status": "Verified",
+      "reportedDate": "18 Oct 2026",
+      "submittedAt": "2026-10-18T11:05:00.000Z",
+      "coordinates": "14.8592° N, 120.8195° E",
+      "latitude": 14.8592,
+      "longitude": 120.8195,
+      "landmark": "Southbound lane near Bulihan Market intersection, Brgy. Bulihan",
+      "description": "Cracking asphalt patch reopening along outer lane, water ponding observed.",
+      "citizen": {
+        "userId": 8,
+        "name": "Ina Villanueva",
+        "email": "ina.villanueva@malolos.gov.ph",
+        "mobile": "+63 917 000 0256"
+      },
+      "updatedAt": new Date().toISOString()
+    },
+    "RW-2026-0837": {
+      "code": "RW-2026-0837",
+      "road": "Blas Ople Diversion Road",
+      "jurisdiction": "DPWH-National",
+      "carriageway": "Northbound",
+      "barangay": "Dakila",
+      "city": "City of Malolos",
+      "severity": "Medium",
+      "status": "Resolved",
+      "reportedDate": "17 Oct 2026",
+      "submittedAt": "2026-10-17T10:12:00.000Z",
+      "resolvedAt": "2026-10-18T16:40:00.000Z",
+      "coordinates": "14.8620° N, 120.8280° E",
+      "latitude": 14.8620,
+      "longitude": 120.8280,
+      "landmark": "Near Dakila coastal bypass junction, Brgy. Dakila, City of Malolos",
+      "description": "Subsided edge joint repaired, compacted and sealed.",
+      "citizen": {
+        "userId": 6,
+        "name": "Luis Mendoza",
+        "email": "luis.mendoza@malolos.gov.ph",
+        "mobile": "+63 917 000 0192"
+      },
+      "repairEvidence": {
+        "decision": "ApprovedResolved",
+        "materialsUsed": "Cold-mix asphalt, RC-250 tack coat, 1-ton vibrating plate compactor",
+        "reviewNotes": "Evidence matches reported site on Blas Ople Diversion Road. Patch is level and safe."
+      },
+      "updatedAt": new Date().toISOString()
+    },
+    "RW-2026-0836": {
+      "code": "RW-2026-0836",
+      "road": "Bocaue–San Jose Road",
+      "jurisdiction": "Outside Jurisdiction",
+      "carriageway": "Northbound",
+      "barangay": "Outside Jurisdiction",
+      "city": "Bocaue",
+      "severity": "High",
+      "status": "Rejected",
+      "reportedDate": "17 Oct 2026",
+      "submittedAt": "2026-10-17T09:00:00.000Z",
+      "coordinates": "14.7980° N, 120.9310° E",
+      "latitude": 14.7980,
+      "longitude": 120.9310,
+      "landmark": "Near Bocaue boundary, outside City of Malolos jurisdiction",
+      "description": "The submitted location is in Bocaue, outside the City of Malolos territorial boundary.",
+      "rejectionCategory": "Outside City of Malolos jurisdiction",
+      "citizenVisibleReason": "The submitted location is in Bocaue, outside the City of Malolos territorial boundary. Please report through the relevant municipality.",
+      "citizen": {
+        "userId": 7,
+        "name": "Bea Navarro",
+        "email": "bea.navarro@malolos.gov.ph",
+        "mobile": "+63 917 000 0234"
+      },
+      "updatedAt": new Date().toISOString()
+    },
+    "RW-2026-0835": {
+      "code": "RW-2026-0835",
+      "road": "MacArthur Highway (Manila North Road)",
+      "jurisdiction": "DPWH-National",
+      "carriageway": "Southbound",
+      "barangay": "Bulihan",
+      "city": "City of Malolos",
+      "severity": "Low",
+      "status": "Duplicate",
+      "duplicateOfReportCode": "RW-2026-0826",
+      "reportedDate": "17 Oct 2026",
+      "submittedAt": "2026-10-17T08:15:00.000Z",
+      "coordinates": "14.8590° N, 120.8193° E",
+      "latitude": 14.8590,
+      "longitude": 120.8193,
+      "landmark": "MacArthur Highway near Bulihan junction (12 m from RW-2026-0826)",
+      "description": "Duplicate citizen report of the same pothole on MacArthur Highway near Bulihan.",
+      "citizenVisibleReason": "The same pothole is already tracked in RW-2026-0826. Your report has been linked so you can follow its repair updates.",
+      "citizen": {
+        "userId": 8,
+        "name": "Ina Villanueva",
+        "email": "ina.villanueva@malolos.gov.ph",
+        "mobile": "+63 917 000 0256"
+      },
+      "updatedAt": new Date().toISOString()
+    }
+  },
+
+  "barangays": {
+    "1": { "id": 1, "name": "Anilao", "district": "Outer / Rural", "lat": 14.8562, "lng": 120.8041 },
+    "2": { "id": 2, "name": "Atlag", "district": "Outer / Rural", "lat": 14.8321, "lng": 120.8245 },
+    "10": { "id": 10, "name": "Bulihan", "district": "Highway Corridor", "lat": 14.8552, "lng": 120.8234 },
+    "20": { "id": 20, "name": "Guinhawa", "district": "Highway Corridor", "lat": 14.8482, "lng": 120.8175 },
+    "26": { "id": 26, "name": "Lugam", "district": "Outer / Rural", "lat": 14.8605, "lng": 120.8030 },
+    "27": { "id": 27, "name": "Mabolo", "district": "Outer / Rural", "lat": 14.8415, "lng": 120.8020 },
+    "41": { "id": 41, "name": "San Vicente", "district": "Poblacion", "lat": 14.8433, "lng": 120.8113 },
+    "51": { "id": 51, "name": "Tikay", "district": "Highway Corridor", "lat": 14.8590, "lng": 120.8420 }
+  }
+};
+
+const outputPath = path.resolve(__dirname, '../firebase-schema-export.json');
+fs.writeFileSync(outputPath, JSON.stringify(fullExport, null, 2), 'utf8');
+console.log(`[Firebase Export] Generated canonical schema export at: ${outputPath}`);

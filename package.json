@@ -1,0 +1,11 @@
+{
+  "name": "luba-canfindit",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npm --prefix backend run dev",
+    "start": "npm --prefix backend start"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.4"
+  }
+}
